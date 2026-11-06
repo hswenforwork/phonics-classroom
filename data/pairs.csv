@@ -1,0 +1,17 @@
+﻿rule,word_a,word_b,sound_a,sound_b,stage
+P-01,bed,bad,/e/,/æ/,1
+P-01,pen,pan,/e/,/æ/,1
+P-02,ship,sheep,/ɪ/,/iː/,3
+P-02,sit,seat,/ɪ/,/iː/,3
+P-03,hot,hut,/ɒ/,/ʌ/,1
+P-03,cot,cut,/ɒ/,/ʌ/,1
+P-04,light,right,/l/,/r/,4
+P-04,long,wrong,/l/,/r/,4
+P-05,van,ban,/v/,/b/,1
+P-05,vet,bet,/v/,/b/,1
+P-06,think,sink,/θ/,/s/,2
+P-06,thin,sin,/θ/,/s/,2
+P-07,thin,thing,/n/,/ŋ/,2
+P-07,ran,rang,/n/,/ŋ/,2
+P-08,full,fool,/ʊ/,/uː/,3
+P-08,pull,pool,/ʊ/,/uː/,3

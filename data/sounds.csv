@@ -1,0 +1,48 @@
+﻿sound_id,ipa,graphemes,examples,audio_file
+a_short,/æ/,a,cat bag hat,audio/sounds/a_short.mp3
+air,/eə/,air,chair,audio/sounds/air.mp3
+ar,/ɑː/,a ar,car farm star,audio/sounds/ar.mp3
+b,/b/,b,bag bed web,audio/sounds/b.mp3
+ch,/tʃ/,ch tch,chick chips lunch,audio/sounds/ch.mp3
+d,/d/,d ed,bed red kid,audio/sounds/d.mp3
+e_short,/e/,ai e ea ie,bed pen ten,audio/sounds/e_short.mp3
+ear,/ɪə/,ear,ear,audio/sounds/ear.mp3
+er,/ɜː/,ir ur,bird nurse,audio/sounds/er.mp3
+f,/f/,f ph,fox fish leaf,audio/sounds/f.mp3
+g,/ɡ/,g,bag leg pig,audio/sounds/g.mp3
+h,/h/,h,hat hot horse,audio/sounds/h.mp3
+happy_i,/i/,ie y,city baby babies,audio/sounds/happy_i.mp3
+i_short,/ɪ/,e i,pig six kid,audio/sounds/i_short.mp3
+j,/dʒ/,dge g j,badge jump page,audio/sounds/j.mp3
+k,/k/,c ch ck k,cat kid cup,audio/sounds/k.mp3
+ks,/ks/,x,six box fox,audio/sounds/ks.mp3
+l,/l/,l ll,leg shell lunch,audio/sounds/l.mp3
+le,/əl/,le,table apple castle,audio/sounds/le.mp3
+long_a,/eɪ/,ai ay,rain day snail,audio/sounds/long_a.mp3
+long_e,/iː/,ea ee eo,bee sheep sea,audio/sounds/long_e.mp3
+long_i,/aɪ/,eye i ie igh y,night pie fly,audio/sounds/long_i.mp3
+long_o,/əʊ/,o oa ow,boat snow rainbow,audio/sounds/long_o.mp3
+long_oo,/uː/,oo ou,moon school you,audio/sounds/long_oo.mp3
+long_u,/juː/,u,cube computer,audio/sounds/long_u.mp3
+m,/m/,m,map mum maths,audio/sounds/m.mp3
+n,/n/,n,van pen ten,audio/sounds/n.mp3
+ng,/ŋ/,n ng,think ring king,audio/sounds/ng.mp3
+o_short,/ɒ/,a o,dog box hot,audio/sounds/o_short.mp3
+or,/ɔː/,a or,horse fork football,audio/sounds/or.mp3
+ow,/aʊ/,ou ow,cow house sunflower,audio/sounds/ow.mp3
+oy,/ɔɪ/,oi oy,coin boy,audio/sounds/oy.mp3
+p,/p/,p,map pen pig,audio/sounds/p.mp3
+r,/r/,r,red ring rain,audio/sounds/r.mp3
+s,/s/,c s ss,yes six sun,audio/sounds/s.mp3
+schwa,/ə/,a e er o or,kitten magnet tiger,audio/sounds/schwa.mp3
+sh,/ʃ/,sh,ship fish shop,audio/sounds/sh.mp3
+short_oo,/ʊ/,oo,book football,audio/sounds/short_oo.mp3
+t,/t/,ed t,cat hat ten,audio/sounds/t.mp3
+th_voiced,/ð/,th,mother the,audio/sounds/th_voiced.mp3
+th_voiceless,/θ/,th,maths think teeth,audio/sounds/th_voiceless.mp3
+u_short,/ʌ/,o u,sun cup bus,audio/sounds/u_short.mp3
+v,/v/,v,van five river,audio/sounds/v.mp3
+w,/w/,w,web witch swim,audio/sounds/w.mp3
+w_u,/wʌ/,o,one,audio/sounds/w_u.mp3
+y,/j/,y,yes you,audio/sounds/y.mp3
+z,/z/,es s zz,buzz nose dogs,audio/sounds/z.mp3

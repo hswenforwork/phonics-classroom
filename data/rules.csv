@@ -1,0 +1,169 @@
+﻿id,stage,character,key,title,mnemonic,action,examples,contrast,reliability,parent_note
+L1-01,1,短母音五兄妹,g:a,a /æ/,看到甲蟲嘴巴張大,雙手捧臉驚訝,"cat, bag",a／e：bad–bed,一定,閉音節裡的 a 讀短音 /æ/，嘴巴張大、嘴角往兩邊拉。
+L1-02,1,字母音,g:b,b /b/,拍皮球彈彈彈,拍球,"bag, bed",b／p、b／v：ban–van,一定,雙唇閉合再彈開，有聲；不要帶尾音 /bə/。
+L1-03,1,字母音,g:c,c /k/,乾乾喉嚨喀一聲,輕拍喉嚨,"cat, cup",軟 c 在地點 5,常常,c 在 a、o、u 和子音前讀 /k/；遇到 e、i、y 變軟音 /s/。
+L1-04,1,字母音,g:d,d /d/,敲沙漠小鼓,雙手敲鼓,"dog, dad",d／t,一定,舌尖頂上齒齦，有聲。
+L1-05,1,短母音五兄妹,g:e,e /e/,嘴角往兩邊扁扁,食指拉嘴角,"egg, bed",e／a、e／i：pen–pin,一定,閉音節裡的 e 讀短音 /e/。
+L1-06,1,字母音,g:f,f /f/,牙齒咬唇輕輕吹,牙咬下唇,"fish, fan",f／v：fan–van,一定,上齒輕碰下唇送氣，無聲。
+L1-07,1,字母音,g:g,g /ɡ/,喉嚨裡咕一聲,摸喉嚨,"go, dog",g／k：goat–coat,常常,g 在 e、i、y 前常變軟音 /dʒ/（地點 5）。
+L1-08,1,字母音,g:h,h /h/,對手心哈一口氣,手心放嘴前,"hat, hot",—,一定,只有氣流，不要讀成 /hə/。
+L1-09,1,短母音五兄妹,g:i,i /ɪ/,小蟲子快快爬,手指當小蟲爬,"pig, sit",i／ee：ship–sheep,一定,閉音節裡的 i 讀短音 /ɪ/，短而放鬆。
+L1-10,1,字母音,g:j,j /dʒ/,跳起來說 jump,原地跳,"jump, jam",—,一定,j 讀 /dʒ/；英文字不以 j 結尾。
+L1-11,1,字母音,g:k,k /k/,跟 c 同一個喀,輕拍喉嚨,"kid, kite",—,一定,k 讀 /k/，常用在 e、i 前面。
+L1-12,1,字母音,g:l,l /l/,舌尖頂住上門牙,舌尖頂牙,"leg, lion",l／r,一定,舌尖頂上齒齦，聲音從兩側出來。
+L1-13,1,字母音,g:m,m /m/,好吃的甲蟲 mmm,摸肚子,"map, mum",—,一定,雙唇閉合、鼻子發聲。
+L1-14,1,字母音,g:n,n /n/,舌頭頂住鼻子響,指鼻子,"net, nut",n／ng：thin–thing,一定,舌尖頂上齒齦、鼻子發聲。
+L1-15,1,短母音五兄妹,g:o,o /ɒ/,嘴巴圓圓看太陽,雙手圍圓,"dog, hot",o／u：hot–hut,一定,英式短 o 是 /ɒ/，嘴巴圓。
+L1-16,1,字母音,g:p,p /p/,吹熄蠟燭，只有氣,手放嘴前感覺氣,"pen, pig",p／b：pat–bat,一定,雙唇爆開送氣，無聲；不要帶尾音。
+L1-17,1,字母音,g:qu,qu /kw/,q 一定牽著 u,兩手牽起來,"queen, quiz",—,一定,q 幾乎都和 u 一起出現，讀 /kw/。
+L1-18,1,字母音,g:r,r /r/,嘴巴嘟起來低低吼,嘟嘴,"red, run",r／l：right–light,一定,嘴唇微嘟、舌尖不碰上顎。
+L1-19,1,字母音,g:s,s /s/,蛇從沙裡嘶嘶嘶,手臂晃成蛇,"sun, sit",s／sh：sip–ship,常常,"s 讀 /s/，在字尾有時讀 /z/（is, dogs）。"
+L1-20,1,字母音,g:t,t /t/,舌尖輕點一下,食指輕敲桌,"ten, tap",t／d：ten–den,一定,舌尖輕觸上齒齦後放開，無聲。
+L1-21,1,短母音五兄妹,g:u,u /ʌ/,撐傘躲太陽，嘴巴微微開,撐傘,"sun, cup",u／a：cup–cap,一定,閉音節裡的 u 讀短音 /ʌ/。
+L1-22,1,字母音,g:v,v /v/,咬唇還要震一震,手摸喉嚨感覺震,"van, vet",v／b、v／f,一定,上齒輕碰下唇，有聲。
+L1-23,1,字母音,g:w,w /w/,嘴巴先嘟再放開,嘟嘴再張開,"web, wet",w／v：wet–vet,一定,嘴唇圓起來再放開。
+L1-24,1,字母音,g:x,x /ks/,一個字母兩個音,比兩根手指,"box, six",音格佔兩格,一定,字尾的 x 是 /k/＋/s/ 兩個音。
+L1-25,1,字母音,g:y,y /j/,點頭說 yes,點頭,"yes, yellow",其他身分在地點 5,一定,y 在字首是子音 /j/。
+L1-26,1,字母音,g:z,z /z/,蜜蜂嗡嗡飛,手指當蜜蜂飛,"zoo, zip",z／s：zip–sip,一定,有聲的嘶嘶聲。
+L1-27,1,蒙蒙,step:blend,合音,一個一個讀，再連起來滑過去,手指滑過音格,c-a-t → cat,—,一定,先逐音讀出，再把音連在一起，不在音和音之間停頓。
+L1-28,1,蒙蒙,step:segment,切音,聽一個音，放一顆石頭,拍一下放一顆,dog → d｜o｜g,—,一定,把聽到的字切成一個個音，一個音放一顆石頭。
+L1-29,1,蒙蒙,step:final,字尾子音收住,尾巴的音只留氣，不加尾音,手握拳收住,desk 不唸 desk-u,—,一定,台灣孩子常在字尾子音後加母音；字尾子音只送氣或收住。
+L2-01,2,抱抱好朋友,g:sh,sh /ʃ/,蒙蒙站哨噓一聲,食指放嘴前,"ship, fish",sip–ship,一定,s 和 h 抱在一起變成新音 /ʃ/，坐一格。
+L2-02,2,抱抱好朋友,g:ch,ch /tʃ/,嚼嚼甲蟲喀喀喀,嘴巴嚼動,"chair, lunch",cat–chat,常常,ch 通常讀 /tʃ/；少數讀 /k/（school）。
+L2-03,2,抱抱好朋友,g:th,th /θ/,舌頭伸出來吹氣,吐舌,"three, bath",sink–think,常常,舌尖放上下齒之間送氣，無聲。
+L2-04,2,抱抱好朋友,g:th:ð,th /ð/,舌頭伸出來還震動,吐舌摸喉嚨,"this, mother",—,常常,同樣吐舌，但有聲；the、this、mother 等。
+L2-05,2,抱抱好朋友,g:ng,ng /ŋ/,鼻子裡哼一聲,指鼻子哼,"sing, ring",thin–thing,一定,舌根抵軟顎，鼻子發聲，不讀出 g。
+L2-06,2,抱抱好朋友,g:nk,nk /ŋk/,哼完再喀一下,指鼻子再拍喉嚨,"pink, think",—,一定,n 在 k 前讀 /ŋ/，後面再接 /k/。
+L2-07,2,抱抱好朋友,g:ph,ph /f/,拍照的 ph 跟 f 一樣,手比相機,"phone, photo",—,一定,ph 讀 /f/。
+L2-08,2,抱抱好朋友,g:wh,wh /w/,問問題的 wh 嘴巴嘟,攤手問「什麼？」,"what, white",—,常常,英式 wh 只讀 /w/；who、whole 讀 /h/。
+L2-09,2,沙丘守門員,g:ck,ck /k/,短母音後面用 ck,兩手比短短,"duck, clock",—,一定,一個短母音後的 /k/ 寫 ck，坐一格。
+L2-10,2,抱抱好朋友,g:ll,ll ss ff zz,雙胞胎站一起只唸一聲,兩指併攏,"bell, kiss, off, buzz",—,一定,兩個一樣的字母只讀一個音，坐一格。
+L2-11,2,沙丘守門員,g:tch,tch /tʃ/,短母音後面加 t 守門,兩手比短短,"match, kitchen",lunch,常常,短母音後的 /tʃ/ 寫 tch；much、rich、such 例外。
+L2-12,2,沙丘守門員,g:dge,dge /dʒ/,短母音後面加 d 守門,兩手比短短,"bridge, fridge",page,一定,短母音後的 /dʒ/ 寫 dge；其他寫 ge。
+L2-13,2,沙丘守門員,spell:ck,c 與 k 怎麼選,a o u 前面是 c，e i 前面是 k,—,"cat, cup / kid, kite",—,常常,拼寫字首 /k/：a、o、u 與子音前用 c，e、i、y 前用 k。
+L2-14,2,沙丘守門員,spell:ck2,ck 與 k 怎麼選,短母音後用 ck，其他用 k,—,"duck / milk, bike, book",—,一定,字尾 /k/：短母音後 ck；子音、長母音、母音組合後 k。
+L2-15,2,沙丘守門員,spell:ck3,ck 不開頭,ck 只在尾巴，不在頭,—,duck,—,一定,沒有以 ck 開頭的英文字。
+L2-16,2,沙丘守門員,spell:floss,Floss 規則,短母音後 f l s z 要雙寫,—,"off, bell, kiss, buzz",—,常常,單音節、短母音後的 f、l、s、z 雙寫；bus、gas、yes、this 例外。
+L2-17,2,沙丘守門員,spell:qu,q 後面接 u,q 一定牽著 u,—,"queen, square",—,一定,q 後面幾乎一定接 u。
+L2-18,2,沙丘守門員,spell:ve,字尾不寫 v,v 不敢站最後，e 來當保鏢,—,"have, give, five",—,一定,英文字不以 v 結尾，後面加 e；這個 e 不一定是 magic e。
+L2-19,2,沙丘守門員,spell:j,字尾不寫 j,j 不站最後，換 dge 或 ge,—,"bridge, orange",—,一定,字尾 /dʒ/ 寫 dge 或 ge。
+L3-01,3,並肩走的雙胞胎,g:ai,ai /eɪ/,a 帶頭喊名字,兩指並肩走,"rain, train",—,常常,ai 讀長 a /eɪ/，多在字中間；said 例外。
+L3-02,3,並肩走的雙胞胎,g:ay,ay /eɪ/,ay 站在尾巴喊,手指字尾,"day, play",—,一定,ay 讀長 a，多在字尾。
+L3-03,3,並肩走的雙胞胎,g:ee,ee /iː/,兩個 e 笑咪咪,嘴角拉開笑,"tree, sheep",—,一定,ee 讀長 e /iː/。
+L3-04,3,並肩走的雙胞胎,g:ea,ea /iː/,ea 常常也笑咪咪,嘴角拉開笑,"sea, eat",head 在地點 5,常常,ea 常讀 /iː/，也可能讀 /e/（head）或 /eɪ/（break）。
+L3-05,3,並肩走的雙胞胎,g:igh,igh /aɪ/,g h 躲起來，i 喊名字,手遮住後兩個字母,"night, light",—,一定,igh 讀長 i /aɪ/，gh 不發音。
+L3-06,3,並肩走的雙胞胎,g:ie,ie /aɪ/,ie 在尾巴喊 i,手指字尾,"pie, tie",field 在地點 5,常常,短字字尾 ie 讀 /aɪ/；有時讀 /iː/（field）。
+L3-07,3,並肩走的雙胞胎,g:oa,oa /əʊ/,小船在綠洲「喔」,手比小船,"boat, coat",—,一定,oa 讀長 o /əʊ/，多在字中間。
+L3-08,3,並肩走的雙胞胎,g:ow,ow /əʊ/,雪花飄在尾巴,手指飄下來,"snow, yellow",cow 是滑沙板,常常,ow 可讀 /əʊ/（snow）或 /aʊ/（cow），先試 /əʊ/。
+L3-09,3,並肩走的雙胞胎,g:oe,oe /əʊ/,o 帶頭喊名字,兩指並肩走,toe,—,常常,oe 讀長 o。
+L3-10,3,並肩走的雙胞胎,g:oo,oo /uː/,月亮圓圓拉長音,雙手圓形拉長,"moon, zoo",—,常常,oo 常讀長音 /uː/，也常讀短音 /ʊ/（book）。
+L3-11,3,並肩走的雙胞胎,g:oo:ʊ,oo /ʊ/,看書時短短一聲,雙手打開書,"book, look",—,常常,book、look、foot 的 oo 讀短音 /ʊ/。
+L3-12,3,並肩走的雙胞胎,g:ue,ue /uː/,藍色尾巴拉長音,手指字尾,"blue, glue",—,常常,ue 多在字尾，讀 /uː/。
+L3-13,3,並肩走的雙胞胎,g:ew,ew /uː/,新的 ew 拉長音,手指字尾,"new, few",—,常常,ew 讀 /uː/ 或 /juː/。
+L3-14,3,老鷹 r,g:ar,ar /ɑː/,老鷹抓住 a，張大嘴啊,手做鷹爪,"car, farm",cat–car,常常,英式 r 不出聲，ar 讀長音 /ɑː/。
+L3-15,3,老鷹 r,g:or,or /ɔː/,老鷹抓住 o，圓嘴拉長,鷹爪＋圓嘴,"horse, more, door, four",hot–horse,常常,or、ore、oor、our 讀 /ɔː/。
+L3-16,3,老鷹 r,g:ir,er ir ur /ɜː/,三個都一樣，嘴巴不動拉長,鷹爪加三根手指,"her, bird, nurse",—,常常,重讀的 er、ir、ur 都讀 /ɜː/。
+L3-17,3,老鷹 r,g:air,air /eə/,椅子上的空氣,指椅子,"chair, square, bear",—,常常,air、are、ear 可讀 /eə/。
+L3-18,3,老鷹 r,g:ear,ear /ɪə/,耳朵聽話的音,指耳朵,"ear, deer, here",—,常常,ear、eer、ere 可讀 /ɪə/。
+L3-19,3,老鷹 r,g:er,er /ə/,尾巴的 er 輕輕一聲,手放輕,"teacher, sister",—,一定,沒重讀的字尾 er 讀 /ə/。
+L3-20,3,老鷹 r,g:wor,w 後的 or,w 後面的 or 變形,嘟嘴＋鷹爪,"word, work, world",—,常常,w 後的 or 讀 /ɜː/。
+L3-21,3,滑沙板,g:ou,ou /aʊ/,從沙丘滑下來「嗚～」,手從高滑到低,"house, mouth",—,常常,ou 多讀 /aʊ/，在字中間；you、touch 例外。
+L3-22,3,滑沙板,g:ow:aʊ,ow /aʊ/,牛跳上滑沙板,手從高滑到低,"cow, clown",—,常常,ow 在字尾或 n、l 前常讀 /aʊ/。
+L3-23,3,滑沙板,g:oi,oi /ɔɪ/,硬幣滑進地洞,手比硬幣滑入,"coin, point",—,一定,oi 讀 /ɔɪ/，在字中間。
+L3-24,3,滑沙板,g:oy,oy /ɔɪ/,玩具在尾巴滑,手指字尾,"boy, toy",—,一定,oy 讀 /ɔɪ/，在字尾。
+L3-25,3,滑沙板,g:aw,aw au al /ɔː/,咬一口圓嘴拉長,圓嘴,"draw, August, walk",—,常常,aw、au、al 常讀 /ɔː/。
+L4-01,4,手牽手小隊,blend:vs,手牽手 vs. 抱抱,手牽手各唸各的，抱抱變新音,牽手對比擁抱,frog（4 格）vs. ship（3 格）,—,一定,子音群每個字母都發音、各坐一格；二合字母合成一個新音、坐一格。
+L4-02,4,手牽手小隊,blend:l,l 小隊,前面的音快快滑到 l,舉手滑向舌尖,"black, clock, flower, play",—,一定,bl cl fl gl pl sl，兩個音都要讀出來。
+L4-03,4,手牽手小隊,blend:r,r 小隊,前面的音快快滑到 r,嘴巴快快嘟起,"brown, frog, green, train",—,一定,br cr dr fr gr pr tr。
+L4-04,4,手牽手小隊,blend:s,s 小隊,s 先嘶一下再接著讀,蛇手勢再接,"skirt, snake, spider, star, swim",—,一定,sc sk sm sn sp st sw。
+L4-05,4,手牽手小隊,blend:3,三人小隊,三個小狐獴牽手衝,三根手指一起往前,"scream, splash, spring, street",—,一定,scr spl spr str squ，三個音快速連讀。
+L4-06,4,手牽手小隊,blend:end,尾巴小隊,尾巴的兩個音都要收住,握拳收兩下,"hand, tent, jump, milk",—,一定,-nd -nt -mp -st -sk -lk -ft -lt。
+L4-07,4,手牽手小隊,blend:noadd,不要加尾音,中間不要加小尾巴,手指快速連滑,frog 不讀 fu-rog,—,一定,子音之間不要自己加母音。
+L4-08,4,手牽手小隊,blend:find,組合字型,先找母音，前後的小隊再加上去,先指母音再往兩邊滑,"stop, lamp, plant",—,一定,CCVC、CVCC：先讀母音，再把前後子音加上去。
+L5-01,5,綠洲精靈 e,g:a-e,a-e /eɪ/,e 不說話，a 喊名字,揮魔杖,"cake, game",cap–cape,常常,母音＋一個子音＋e：e 不發音，a 讀長音 /eɪ/。
+L5-02,5,綠洲精靈 e,g:i-e,i-e /aɪ/,e 不說話，i 喊名字,揮魔杖,"bike, five",kit–kite,常常,i-e 讀 /aɪ/。
+L5-03,5,綠洲精靈 e,g:o-e,o-e /əʊ/,e 不說話，o 喊名字,揮魔杖,"home, nose",hop–hope,常常,o-e 讀 /əʊ/；come、some、done 例外。
+L5-04,5,綠洲精靈 e,g:u-e,u-e /juː/,e 不說話，u 喊名字,揮魔杖,"cube, June",cub–cube,常常,u-e 讀 /juː/ 或 /uː/。
+L5-05,5,綠洲精靈 e,g:e-e,e-e /iː/,e 不說話，e 喊名字,揮魔杖,"these, Pete",—,常常,e-e 讀 /iː/，字很少。
+L5-06,5,綠洲精靈 e,g:ve,保鏢 e,v 後面的 e 是保鏢，不是精靈,雙手交叉守護,"have, give, love",—,一定,字尾 v 一定加 e；這個 e 不改變前面母音的讀音。
+L5-07,5,同音家族,alt:eɪ,長 a 的拼法,同一個音，穿不同的衣服,—,"rain, day, cake, grey, eight",—,有時候,"/eɪ/：ai, ay, a-e, ey, eigh。"
+L5-08,5,同音家族,alt:iː,長 e 的拼法,同一個音，穿不同的衣服,—,"tree, sea, he, happy, field",—,有時候,"/iː/：ee, ea, e, y, ie, e-e。"
+L5-09,5,同音家族,alt:aɪ,長 i 的拼法,同一個音，穿不同的衣服,—,"night, pie, bike, fly, find",—,有時候,"/aɪ/：igh, ie, i-e, y, i。"
+L5-10,5,同音家族,alt:əʊ,長 o 的拼法,同一個音，穿不同的衣服,—,"boat, snow, home, toe, go",—,有時候,"/əʊ/：oa, ow, o-e, oe, o。"
+L5-11,5,同音家族,alt:uː,長 oo 的拼法,同一個音，穿不同的衣服,—,"moon, blue, new, June",—,有時候,"/uː/：oo, ue, ew, u-e。"
+L5-12,5,同音家族,multi:ea,ea 的讀音,先試最常見的音，讀不通就換一個,—,"sea, head, break",—,有時候,ea：先試 /iː/，再試 /e/，再試 /eɪ/。
+L5-13,5,同音家族,multi:ow,ow 的讀音,先試最常見的音，讀不通就換一個,—,"snow, cow",—,有時候,ow：先試 /əʊ/，再試 /aʊ/。
+L5-14,5,同音家族,multi:oo,oo 的讀音,先試最常見的音，讀不通就換一個,—,"moon, book",—,有時候,oo：先試 /uː/，再試 /ʊ/。
+L5-15,5,同音家族,multi:ie,ie 的讀音,先試最常見的音，讀不通就換一個,—,"pie, field",—,有時候,ie：先試 /aɪ/，再試 /iː/。
+L5-16,5,同音家族,multi:ou,ou 的讀音,先試最常見的音，讀不通就換一個,—,"out, you, touch",—,有時候,ou：先試 /aʊ/，再試 /uː/、/ʌ/。
+L5-17,5,同音家族,multi:ch,ch 的讀音,先試最常見的音，讀不通就換一個,—,"chair, school",—,有時候,ch：先試 /tʃ/，再試 /k/。
+L5-18,5,軟沙,soft:c,軟 c,c 踩到 e i y 軟沙變 /s/,腳踩下陷,"city, pencil, face",cat–city,一定,c 在 e、i、y 前讀 /s/。
+L5-19,5,軟沙,soft:g,軟 g,g 踩到 e i y 常常變 /dʒ/,腳踩下陷,"giraffe, orange, page",go–giant,常常,g 在 e、i、y 前常讀 /dʒ/；get、give、girl 例外。
+L5-20,5,會變裝的 y,y:j,y 在字首,站最前面穿子音裝,—,"yes, yellow",—,一定,字首 y 讀 /j/。
+L5-21,5,會變裝的 y,y:aɪ,y 在短字字尾,短字尾巴穿長 i 裝,—,"my, fly, why",—,一定,單音節字尾 y 讀 /aɪ/。
+L5-22,5,會變裝的 y,y:i,y 在長字字尾,長字尾巴穿長 e 裝,—,"happy, baby, family",—,常常,多音節字尾 y 讀 /i/。
+L5-23,5,會變裝的 y,y:ɪ,y 在字中間,中間穿短 i 裝,—,gym,—,常常,字中間的 y 多讀 /ɪ/。
+L5-24,5,會變裝的 y,y:end,字尾用 y 不用 i,i 害羞不站最後，讓 y 來,—,"my, happy",—,常常,英文字很少以 i 結尾，所以字尾 /aɪ/、/i/ 多寫 y。
+L6-01,6,石頭門,type:C,閉音節 Closed,門關上，小聲短短叫,雙手合起來,"cat, rab-bit",—,常常,一個母音、後面有子音擋住：母音讀短音。
+L6-02,6,石頭門,type:O,開音節 Open,門打開，大聲喊名字,雙手打開,"go, ti-ger, ba-by",hot–ho,常常,音節以一個母音結尾：母音讀長音（喊自己的名字）。
+L6-03,6,綠洲精靈 e,type:E,魔法 e Magic e,e 不說話，前面喊名字,揮魔杖,"cake, cup-cake",hop–hope,常常,母音＋一個子音＋不發音 e：母音讀長音。
+L6-04,6,並肩走的雙胞胎,type:T,母音組合 Vowel team,兩個一起走，常常前面說話,兩指並肩走,"rain, rain-bow",ran–rain,常常,兩個以上字母合成一個母音音。
+L6-05,6,老鷹 r,type:R,r 控制 Bossy r,r 不出聲，母音拉長,手做鷹爪,"car, gar-den",cat–car,常常,母音後緊接 r，母音聲音被 r 改變；英式 r 不出聲。
+L6-06,6,滑沙板,type:D,雙母音 Diphthong,嘴巴滑沙丘,手從高滑到低,"cow, cow-boy",—,一定,oi、oy、ou、ow：嘴型會滑動。
+L6-07,6,狐獴尾巴,type:L,子音＋le C-le,尾巴抓一個子音一起走,手在背後擺尾巴,"ta-ble, lit-tle, ap-ple",—,一定,字尾「子音＋le」自成一個音節，讀 /əl/。
+L6-08,6,狐獴尾巴,type:S,尾巴零件,尾巴零件整塊認,整塊拿起來,"sta-tion, pic-ture",—,一定,-tion /ʃən/、-ture /tʃə/、-sion /ʒən/ 整塊讀。
+L6-09,6,石頭門,div:count,一個音節一個母音音,數母音的音，不是數母音字母,—,cake（1 個）、boat（1 個）,—,一定,音節數＝母音音的數量。
+L6-10,6,探險背包,div:affix,先拆字首字尾,先卸下背包和帽子,—,"un-hap-py, jump-ing",—,一定,先把字首、字尾分出來，再拆字根。
+L6-11,6,抱抱好朋友,div:digraph,抱抱好朋友不拆,抱在一起的不能拆,—,"fash-ion, feath-er",—,一定,二合字母算一個子音，不可拆開。
+L6-12,6,石頭門,div:compound,複合字,兩個小字拼一個大字，中間分開,兩個拳頭分開,"sun-flower, foot-ball",—,一定,複合字從兩個字中間切開。
+L6-13,6,石頭門,div:VCCV,VC/CV,兩個子音手牽手，中間挖道牆,手刀從中間切,"rab-bit, pic-nic, hap-py",—,常常,兩母音之間兩個子音：從中間切，前一個是閉音節。
+L6-14,6,石頭門,div:VCV-open,V/CV,一個子音？先把門打開試試,雙手打開,"ti-ger, ro-bot, pa-per",—,有時候,一個子音：先切在子音前，前一個是開音節、長母音。
+L6-15,6,石頭門,div:VCV-closed,VC/V,打開讀不通，就把門關上,雙手合起來,"riv-er, cam-el, lem-on",—,有時候,V/CV 讀不出真字時，改切在子音後，前一個是閉音節、短母音。
+L6-16,6,手牽手小隊,div:VCCCV,VC/CCV,三個子音時，手牽手小隊不分開,手刀避開小隊,"mon-ster, hun-dred",—,常常,三個子音：子音群保持在一起。
+L6-17,6,狐獴尾巴,div:cle,/C+le,尾巴帶走前面一個子音,手在背後擺,"ta-ble, can-dle",—,一定,從 le 前面那個子音前切。
+L6-18,6,石頭門,div:VV,V/V,兩個母音各唸各的，中間分開,兩手各指一邊,"li-on, vi-o-lin",—,有時候,兩個相鄰母音各發各的音時，從中間切。
+L6-19,6,石頭門,div:double,雙寫子音,雙胞胎分兩邊住，讀的時候只一個音,兩指分開,"rab-bit, hip-po",—,一定,雙寫子音分到兩個音節，合讀時只算一個音。
+L6-20,6,蒙蒙,step:stress,重音,大石頭大聲，小石頭輕輕,重音拍大聲,"RAB-bit, ba-NA-na",—,常常,重音音節唸大聲、長一點，其他音節輕輕帶過。
+L7-01,7,探險背包,suf:雙寫,雙寫規則 1-1-1,短母音怕被吵醒，多派一個守門,兩指站崗,"swim→swimming, big→bigger",—,一定,一個音節、一個短母音、一個字尾子音，加母音開頭字尾時雙寫子音。
+L7-02,7,探險背包,suf:l,英式 l 雙寫,英式的 l 一定帶雙胞胎,兩指併攏,"travelling, cancelled",—,一定,英式拼法 l 結尾加 -ing／-ed 時雙寫 l。
+L7-03,7,探險背包,suf:去e,去 e 規則,背包是母音開頭，精靈 e 就讓位,揮手再見,"make→making, ride→riding",—,一定,字尾不發音 e，加母音開頭字尾時去掉 e。
+L7-04,7,探險背包,suf:y變i,y 變 i 規則,子音後面的 y，換上 i 的衣服,轉一圈變裝,"baby→babies, carry→carried",—,一定,子音＋y 加字尾時 y 改 i；-ing 不改。
+L7-05,7,探險背包,suf:es,-s 與 -es,嘶嘶、噓噓、喀喀結尾加 es,—,"buses, dishes, boxes",—,一定,s、ss、sh、ch、x、z 結尾加 -es。
+L7-06,7,探險背包,suf:/s/,-s 的三種讀音,氣音後 /s/，震動音後 /z/，嘶嘶後 /ɪz/,—,"cats, dogs, boxes",—,一定,無聲音後讀 /s/，有聲音後讀 /z/，-es 讀 /ɪz/。
+L7-07,7,探險背包,suf:/t/,-ed 的三種讀音,t d 結尾讀 /ɪd/，氣音後 /t/，震動音後 /d/,—,"wanted, jumped, played",—,一定,-ed 依前一個音決定讀 /ɪd/、/t/、/d/。
+L7-08,7,探險背包,suf:f變ves,f、fe 變 ves,葉子多了變 ves,—,"leaf→leaves, knife→knives",—,常常,f、fe 結尾的複數多改 -ves；roof→roofs 例外。
+L7-09,7,探險背包,suf:o-es,-o 加 -es,番茄和馬鈴薯要 es,—,"tomatoes, potatoes",—,有時候,部分 o 結尾名詞加 -es；photos、pianos 例外。
+L7-10,7,探險背包,suf:不規則,不規則複數,這些字變身不加 s,—,"men, children, mice, feet",—,—,不規則複數需整字記。
+L7-11,7,探險背包,suf:ing,-ing,正在做的背包,—,"jumping, playing",—,一定,-ing 表示正在做。
+L7-12,7,探險背包,suf:er,-er、-est,比一比的背包,—,"bigger, biggest",—,一定,-er 比較級、-est 最高級。
+L7-13,7,探險背包,suf:ful,-ful、-less,裝滿／沒有的背包,—,"helpful, careless",—,一定,-ful 有、-less 沒有。
+L7-14,7,探險背包,suf:ly,-ly,怎麼做的背包，直接加,—,"quickly, slowly",—,一定,-ly 直接加在字後面。
+L7-15,7,探險背包,suf:un,un-、re-,戴在頭上的帽子,—,"unhappy, replay",—,一定,un- 不、re- 再一次。
+L8-01,8,懶洋洋的甲蟲,g:ə,弱讀 schwa /ə/,小石頭上的母音懶懶說 /ə/,打一個小哈欠,"a-bout, ba-na-na, les-son",—,常常,沒重讀音節的母音常弱化成 /ə/，任何母音字母都可能。
+L8-02,8,懶洋洋的甲蟲,schwa:spell,拼寫用拼寫音,寫字時把懶甲蟲叫醒,拍拍肩,"Wed-nes-day, choc-o-late",—,—,拼寫時可以用「拼寫音」把每個母音讀清楚來記。
+L8-03,8,懶洋洋的甲蟲,schwa:small,句子裡的小字弱讀,a the of to for 在句子裡輕輕唸,手放輕,a cup of tea,—,常常,功能詞在句子中常弱讀。
+L8-04,8,隱形狐獴,silent:k,kn- 的 k,k 躲在 n 前面不出聲,—,"knee, know, knife",—,一定,kn 開頭的 k 不發音。
+L8-05,8,隱形狐獴,silent:w,wr- 的 w,w 躲在 r 前面不出聲,—,"write, wrong",—,一定,wr 開頭的 w 不發音。
+L8-06,8,隱形狐獴,silent:b,-mb 的 b,b 躲在 m 後面不出聲,—,"climb, lamb",—,一定,mb 結尾的 b 不發音。
+L8-07,8,隱形狐獴,silent:gh,-igh 的 gh,g h 雙人隱形,—,"night, light",—,一定,igh 的 gh 不發音。
+L8-08,8,隱形狐獴,silent:l,-alk 的 l,l 在 walk 裡睡覺,—,"walk, talk",—,一定,alk 的 l 不發音。
+L8-09,8,隱形狐獴,silent:t,-stle 的 t,t 在城堡裡睡覺,—,"castle, listen",—,一定,stle、sten 的 t 不發音。
+L8-10,8,隱形狐獴,silent:u,bu-、gu- 的 u,u 躲在後面不出聲,—,"build, guitar",—,一定,bu、gu 的 u 常不發音。
+L8-11,8,隱形狐獴,silent:h,h- 開頭不發音,有些 h 不出聲,—,"hour, honest",—,有時候,少數 h 開頭的字 h 不發音。
+L8-12,8,隱形狐獴,silent:wh,英式 wh 的 h,英式的 wh 只唸 w,—,"what, where",—,一定,英式 wh 只讀 /w/。
+L8-13,8,星空小精靈,fam:ind,-ind -ild -old -ost,這家人門關著也大聲,—,"find, child, old, most",—,常常,這些字族閉音節卻讀長母音。
+L8-14,8,星空小精靈,fam:all,-all,a 遇到 ll 變圓嘴,—,"ball, tall, small",—,一定,all 讀 /ɔːl/。
+L8-15,8,星空小精靈,fam:ould,-ould,這三兄弟長得一樣,—,"could, would, should",—,一定,ould 讀 /ʊd/，l 不發音。
+L8-16,8,星空小精靈,fam:other,-other,媽媽哥哥都唸 /ʌ/,—,"mother, brother, other",—,一定,other 的 o 讀 /ʌ/。
+L8-17,8,星空小精靈,fam:wa,w 後的 a,w 把 a 的嘴巴變圓,—,"was, want, watch, water",—,常常,w 後的 a 常讀 /ɒ/ 或 /ɔː/。
+L8-18,8,星空小精靈,fam:oʌ,o 讀 /ʌ/,o 偷穿 u 的衣服,—,"come, some, love, Monday",—,常常,一些字的 o 讀 /ʌ/。
+L8-19,8,星空小精靈,fam:ough,ough 家族,ough 是變身大師，整字認,—,"though, through, thought",—,—,ough 有多種讀音，需整字記。
+L8-20,8,星空小精靈,tricky,例外字,調皮字母畫愛心，其他照規則拼,比愛心,"said, was, the, you",—,—,先拼出規則的部分，只記不規則的那個地方。
+P-01,1,發音專區,pair:P-01,/e/ 和 /æ/,e 扁扁，a 張大大,—,"bed–bad, pen–pan",—,—,嘴巴張開的大小不同。
+P-02,3,發音專區,pair:P-02,/ɪ/ 和 /iː/,小蟲快快爬，綿羊笑咪咪,—,"ship–sheep, sit–seat",—,—,短而鬆 vs. 長而緊。
+P-03,1,發音專區,pair:P-03,/ɒ/ 和 /ʌ/,o 圓圓，u 微微開,—,"hot–hut, cot–cut",—,—,圓唇 vs. 微開。
+P-04,4,發音專區,pair:P-04,/l/ 和 /r/,l 舌尖頂，r 嘟嘴巴,—,"light–right, long–wrong",—,—,舌尖是否碰上齒齦。
+P-05,1,發音專區,pair:P-05,/v/ 和 /b/,v 咬唇震，b 合唇彈,—,"van–ban, vet–bet",—,—,上齒碰下唇 vs. 雙唇。
+P-06,2,發音專區,pair:P-06,/θ/ 和 /s/,th 吐舌頭，s 舌頭藏好,—,"think–sink, thin–sin",—,—,舌頭是否伸到齒間。
+P-07,2,發音專區,pair:P-07,/n/ 和 /ŋ/,n 舌尖頂，ng 鼻子哼,—,"thin–thing, ran–rang",—,—,舌尖 vs. 舌根。
+P-08,3,發音專區,pair:P-08,/ʊ/ 和 /uː/,看書短短，月亮拉長,—,"full–fool, pull–pool",—,—,短音 vs. 長音。

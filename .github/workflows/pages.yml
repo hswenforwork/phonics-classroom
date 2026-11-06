@@ -1,0 +1,40 @@
+# 部署網站到 GitHub Pages
+# 使用前請到 Settings → Pages，把 Source 改成「GitHub Actions」。
+# 部署時會自動產生 assets.json（列出 audio/、images/ 裡有哪些檔案），網站靠它知道要不要改用你上傳的圖片和音檔。
+name: 部署網站
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [單字申請單]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: 產生素材清單 assets.json
+        run: python3 scripts/build_assets.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
