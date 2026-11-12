@@ -215,11 +215,13 @@ async function load(name) {
   return parseCSV(await r.text());
 }
 
-export const DB = { vowels: [], words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
+export const DB = { ladders: [], vowels: [], words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
 
 export async function loadAll() {
-  const [words, sentences, stories, pairs, rules, sounds, vowels] = await Promise.all(
-    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv', 'vowels.csv'].map(load));
+  const [words, sentences, stories, pairs, rules, sounds, vowels, ladders] = await Promise.all(
+    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv', 'vowels.csv', 'ladders.csv'].map(load));
+  // 字梯：steps 是「c-a-t c-a-p …」，每一階用 - 分開每一個音
+  DB.ladders = ladders.filter((r) => r.steps).map((r) => ({ id: r.id, stage: +r.stage, steps: r.steps.split(/\s+/).filter(Boolean).map((x) => x.split('-')) }));
   DB.vowels = vowels;
   DB.words = words.filter((r) => r.checked !== 'N' && r.word).map(enrichWord);
   DB.byId = Object.fromEntries(DB.words.map((w) => [w.id, w]));

@@ -6,7 +6,7 @@ name: 產生語音
 on:
   push:
     branches: [main]
-    paths: [data/words.csv, data/sentences.csv, data/stories.csv, data/pairs.csv]
+    paths: [data/words.csv, data/sentences.csv, data/stories.csv, data/pairs.csv, data/ladder_words.csv]
   workflow_run:
     workflows: [單字申請單]
     types: [completed]

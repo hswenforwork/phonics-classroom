@@ -4,6 +4,7 @@
 - 字庫每個字：audio/words/<word>.mp3（整字），多音節字再產生 audio/syllables/<word>-<第幾節，從 0 開始>.mp3
 - 句子：audio/sentences/<id>.mp3；故事：audio/stories/<stage>-<page>.mp3
 - 句子、故事、聽聽看裡出現、但不在字庫的字：audio/words/<word>.mp3（點單字時用）
+- 字梯（data/ladders.csv）用到、但不在字庫的字：照 data/ladder_words.csv 的音標產生 audio/words/<word>.mp3
 
 發音依據：
 - 字庫裡的字一律用 SSML <phoneme alphabet="ipa"> 照字庫的英式音標念（句子、故事裡的字也是）
@@ -115,6 +116,18 @@ def main():
             for i, (s, p) in enumerate(zip(syls, parts)):
                 p = p.replace('ˈ', '').replace('ˌ', '')
                 jobs.append((f'audio/syllables/{w}-{i}.mp3', 'ipa:' + p, f'<speak>{phon(s, p)}</speak>', RATE['syllable']))
+
+    # 字梯專用的字（data/ladder_words.csv）：不在字庫的，也照音標產生整字語音
+    for r in read('ladder_words.csv'):
+        w = (r.get('word') or '').strip().lower()
+        if not w or w in bank or not r.get('ipa'):
+            continue
+        g, bad = to_google(r['ipa'])
+        if bad:
+            errors.append(f'字梯 {w}：音標 {r["ipa"]} 有 Google 不認得的符號 {" ".join(sorted(set(bad)))}')
+            continue
+        bank[w] = g
+        jobs.append((f'audio/words/{w}.mp3', 'ipa:' + g, f'<speak>{phon(w, g)}</speak>', RATE['word']))
 
     # 句子、故事：字庫裡的字照字庫音標念
     def sentence_ssml(text):

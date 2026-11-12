@@ -2,6 +2,7 @@
 import { DB, PLACES, NODES, DEFAULT_PH, wordsOf, rule } from './data.js';
 import { soundItem } from './audio.js';
 import { vowelIndex, spellOf, cardFor } from './vowels.js';
+import { playLadder, laddersFor } from './ladder.js';
 import { play, stop, wordItem, syllableItem, sentenceItem, storyItem, say, sfx, setAudioSettings, hasAsset } from './audio.js';
 import { autogen } from './autogen.js';
 import { applyZhuyin } from './zhuyin.js';
@@ -82,7 +83,15 @@ function startAdventure() {
   const fresh = wordsOf(stage).filter((w) => !p.words[w.id]).slice(0, warm.length ? 2 : 3);
   const list = [...warm, ...fresh];
   if (!list.length) return toast('全部都探險過了！到探險手冊看看吧！');
-  runWords(list, { warmCount: warm.length });
+  // 巡邏暖身：先爬一條 5 階短字梯（不給腳印章）
+  const ls = laddersFor(stage);
+  if (!ls.length) return runWords(list, { warmCount: warm.length });
+  const area = h('main', { class: 'tab-body' });
+  app().replaceChildren(h('div', { class: 'screen' }, topBar(() => go('home'), h('b', {}, '暖身：爬字梯')), dune(), area));
+  say('先跟蒙蒙爬一條字梯暖暖身！');
+  playLadder(area, ls[Math.floor(Math.random() * ls.length)], { maxSteps: 5, onDone: () => {
+    setTimeout(() => area.append(h('div', { class: 'vg-end' }, h('button', { class: 'btn primary big', onClick: () => runWords(list, { warmCount: warm.length }) }, '出發去探險！'))), 1500);
+  } });
 }
 
 export function runWords(list, { quick = false, warmCount = 0, mystery = false, back = 'home' } = {}) {
@@ -112,7 +121,7 @@ export function runWords(list, { quick = false, warmCount = 0, mystery = false, 
 }
 
 // ---------- 一個地點 ----------
-const TABS = [['words', '單字'], ['spell', '我來拼'], ['vowel', '母音挑戰'], ['sent', '讀句子'], ['story', '小故事'], ['pairs', '聽聽看']];
+const TABS = [['words', '單字'], ['spell', '我來拼'], ['vowel', '母音挑戰'], ['ladder', '字梯'], ['sent', '讀句子'], ['story', '小故事'], ['pairs', '聽聽看']];
 const vowelTabName = (no) => (no <= 2 ? '聽音選母音' : '這個音怎麼拼');
 export function placeScreen(no, tab = 'words') {
   no = +no; const pl = PLACES[no]; const p = S.me(); if (!p || !pl) return go('home');
@@ -122,7 +131,7 @@ export function placeScreen(no, tab = 'words') {
   app().replaceChildren(h('div', { class: 'screen place', style: { '--bg': pl.bg, '--fg': pl.fg, '--tx': pl.tx } },
     topBar(() => go('home'), h('div', { class: 'place-title' }, h('b', {}, pl.name), h('small', {}, pl.topic + `｜探險過 ${pr.done} / ${pr.total} 個字`)), stampCount()),
     dune(), tabs, body));
-  ({ words: tabWords, spell: tabSpell, vowel: tabVowel, sent: tabSentences, story: tabStory, pairs: tabPairs }[tab] || tabWords)(body, no, ws);
+  ({ words: tabWords, spell: tabSpell, vowel: tabVowel, ladder: tabLadder, sent: tabSentences, story: tabStory, pairs: tabPairs }[tab] || tabWords)(body, no, ws);
 }
 
 function wordCard(w, onClick) {
@@ -265,6 +274,25 @@ function tabVowel(body, no) {
   };
   const tabVowelRestart = () => { body.replaceChildren(); tabVowel(body, no); };
   next();
+}
+
+// ---------- 字梯：每一階只換一個音 ----------
+function tabLadder(body, no) {
+  const list = laddersFor(no);
+  body.append(title('爬字梯：聽一聽，哪一個音變了？'));
+  if (!list.length) { body.append(h('p', { class: 'hint' }, '字梯的語音還在準備中，晚一點再來！')); return; }
+  const area = h('div', {});
+  body.append(area);
+  const start = () => {
+    const l = list[Math.floor(Math.random() * list.length)];
+    playLadder(area, l, { onDone: (right, total) => {
+      const got = S.dailyReward('ladder', no, right);
+      setTimeout(() => area.append(h('div', { class: 'vg-end' }, h('h2', {}, `${total} 階裡第一次就答對 ${right} 階！`),
+        got ? h('p', {}, `拿到 ${got} 個腳印章！`, stamps(got, got, 22)) : h('p', { class: 'muted' }, '今天這一站的字梯腳印章已經拿過了，明天再來！'),
+        h('button', { class: 'btn primary', onClick: start }, '再爬一條'))), 1200);
+    } });
+  };
+  start();
 }
 
 // ---------- 探險手冊：地道網、深淺房間、收集 ----------

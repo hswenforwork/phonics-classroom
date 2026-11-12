@@ -81,11 +81,12 @@ export function place(itemId, slot) { const p = me(); for (const k in p.placed) 
 export function mysteryDone() { const p = me(); return !!(p && p.mystery[today()]); }
 export function markMystery() { const p = me(); if (!p || p.mystery[today()]) return; p.mystery[today()] = 1; p.bonus = (p.bonus || 0) + 3; save(); }
 
-// 母音小遊戲：每一站每天第一次玩完可以拿腳印章
-export function vowelReward(no, n) {
+// 小遊戲（母音挑戰、字梯）：每一站每天第一次玩完可以拿腳印章
+export const vowelReward = (no, n) => dailyReward('', no, n);
+export function dailyReward(kind, no, n) {
   const p = me(); if (!p) return 0;
   p.vowelGame = p.vowelGame || {};
-  const k = today() + '|' + no;
+  const k = today() + '|' + (kind ? kind + ':' : '') + no;
   if (p.vowelGame[k] != null || n <= 0) { if (p.vowelGame[k] == null) p.vowelGame[k] = 0; save(); return 0; }
   p.vowelGame[k] = n; p.bonus = (p.bonus || 0) + n; save(); return n;
 }
