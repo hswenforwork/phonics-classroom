@@ -168,7 +168,7 @@ S6-24,alligator,6,地道迷宮,,鱷魚,al/li/ga/tor,a-l/l-i/g-a=eɪ/t-or=ə,/ˈ�
 S6-25,insect,6,地道迷宮,,昆蟲,in/sect,i-n/s-e-c-t,/ˈɪn.sekt/,C/C,1,,,補充,,Y
 S6-26,igloo,6,地道迷宮,,雪屋,ig/loo,i-g/l-oo=uː,/ˈɪɡ.luː/,C/T,1,,,補充,,Y
 S6-27,mitten,6,地道迷宮,,手套,mit/ten,m-i-t/t-e=ə-n,/ˈmɪt.ən/,C/C,1,,,補充,,Y
-S6-28,quarter,6,地道迷宮,,四分之一、季度,quar/ter,q=k-u=w-ar=ɔː/t-er,/ˈkwɔː.tə/,R/R,1,,,補充,,Y
+S6-28,quarter,8,星空營地,,四分之一、季度,quar/ter,q=k-u=w-ar=ɔː/t-er,/ˈkwɔː.tə/,R/R,1,ar,,補充,,Y
 S6-29,under,6,地道迷宮,,下方,un/der,u=ʌ-n/d-er=ə,/ˈʌn.də/,C/R,1,,,補充,,Y
 S6-30,umbrella,6,地道迷宮,☂️,雨傘,um/brel/la,u=ʌ-m/b-r-e-l/l-a=ə,/ʌmˈbrel.ə/,C/C/O,2,,,補充,,Y
 S6-31,wagon,6,地道迷宮,,旅行車,wag/on,w-a=æ-g/o=ə-n,/ˈwæɡ.ən/,C/C,1,,,補充,,Y
@@ -211,9 +211,9 @@ S8-09,lamb,8,星空營地,🐑,小羊,lamb,l-a-m[b],/læm/,C,1,b,,補充,,Y
 S8-10,climb,8,星空營地,🧗,爬,climb,c-l-i=aɪ-m[b],/klaɪm/,W,1,b,,Movers,,Y
 S8-11,walk,8,星空營地,🚶,走路,walk,w-a=ɔː[l]-k,/wɔːk/,W,1,l,,Starters,,Y
 S8-12,castle,8,星空營地,🏰,城堡,cas/tle,c-a=ɑː-s/[t]le=əl,/ˈkɑː.səl/,C/L,1,t,,Flyers,,Y
-S8-13,find,8,星空營地,🔍,找到,find,f-i=aɪ-n-d,/faɪnd/,W,1,,,Starters,,Y
-S8-14,child,8,星空營地,🧒,小孩,child,ch-i=aɪ-l-d,/tʃaɪld/,W,1,,,Starters,,Y
-S8-15,old,8,星空營地,👴,老的,old,o=əʊ-l-d,/əʊld/,W,1,,,Starters,,Y
+S8-13,find,8,星空營地,🔍,找到,find,f-i=aɪ-n-d,/faɪnd/,W,1,i,,Starters,,Y
+S8-14,child,8,星空營地,🧒,小孩,child,ch-i=aɪ-l-d,/tʃaɪld/,W,1,i,,Starters,,Y
+S8-15,old,8,星空營地,👴,老的,old,o=əʊ-l-d,/əʊld/,W,1,o,,Starters,,Y
 S8-16,ball,8,星空營地,⚽,球,ball,b-a=ɔː-ll,/bɔːl/,W,1,a,,Starters,,Y
 S8-17,water,8,星空營地,💧,水,wa/ter,w-a=ɔː/t-er=ə,/ˈwɔː.tə/,W/R,1,a,,Starters,,Y
 S7-18,wanted,8,星空營地,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
@@ -228,11 +228,11 @@ S8-24,friend,8,星空營地,🧑‍🤝‍🧑,朋友,friend,f-r-ie=e-n-d,/frend
 S8-25,people,8,星空營地,👥,人們,peo/ple,p-eo=iː/p-le=əl,/ˈpiː.pəl/,W/L,1,eo,,Starters,,Y
 S8-26,eye,8,星空營地,👁️,眼睛,eye,eye=aɪ,/aɪ/,W,1,eye,,Starters,,Y
 S8-27,elephant,6,地道迷宮,🐘,大象,el/e/phant,e-l/e=ɪ/ph=f-a=ə-n-t,/ˈel.ɪ.fənt/,C/O/C,1,,,補充,,Y
-S8-28,eight,8,星空營地,,八,eight,eigh=eɪ-t,/eɪt/,W,1,,,補充,,Y
+S8-28,eight,8,星空營地,,八,eight,eigh=eɪ-t,/eɪt/,W,1,eigh,,補充,,Y
 S8-29,juice,8,星空營地,🧃,果汁,juice,j=dʒ-ui=uː-c=s[e],/dʒuːs/,W,1,ui,,補充,,Y
 S8-30,octopus,8,星空營地,🐙,章魚,oc/to/pus,o=ɒ-c/t-o=ə/p-u=ə-s,/ˈɒk.tə.pəs/,W/O/C,1,o,,補充,,Y
 S8-31,wolf,8,星空營地,🐺,野狼,wolf,w-o=ʊ-l-f,/wʊlf/,W,1,o,,補充,,Y
-S8-32,wall,8,星空營地,,留言板,wall,w-a=ɔː-ll,/wɔːl/,W,1,,,補充,,Y
+S8-32,wall,8,星空營地,,留言板,wall,w-a=ɔː-ll,/wɔːl/,W,1,a,,補充,,Y
 S8-33,yacht,8,星空營地,,遊艇,yacht,y-a=ɒ[ch]-t,/jɒt/,W,1,ach,,補充,,Y
 S8-34,picture,8,星空營地,🖼️,圖畫,pic/ture,p-i-c/ture=tʃə,/ˈpɪk.tʃə/,C/S,1,,,補充,,Y
 S8-35,station,8,星空營地,🚉,車站,sta/tion,s-t-a=eɪ/tion=ʃən,/ˈsteɪ.ʃən/,O/S,1,,,補充,,Y
