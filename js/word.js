@@ -7,7 +7,7 @@ import * as S from './store.js';
 const STEPS = [
   { n: 1, name: '聽音', title: '仔細聽，這個字有幾節？', applies: () => true },
   { n: 2, name: '看字', title: '看看這個字！', applies: () => true },
-  { n: 3, name: '例外字', title: '這個字有調皮字母嗎？', applies: () => true },
+  { n: 3, name: '例外字', title: '這個字有調皮字母嗎？', applies: (w) => w.stage === 8 }, // 只有第 8 站（星空營地）的字
   { n: 4, name: '字尾', title: '卸下背包：加字尾發生什麼事？', applies: (w) => !!w.suf },
   { n: 5, name: '母音', title: '點出所有母音！', applies: () => true },
   { n: 6, name: '子音', title: '點出兩個母音中間的子音！', applies: (w) => w.syls.length > 1 },
@@ -98,7 +98,8 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
     const tray = h('div', { class: 'tray' }); const track = h('div', { class: 'track' });
     const say1 = () => play(wordItem(w));
     const pebble = () => { const p = h('button', { class: 'pebble', 'aria-label': '小石頭' }); p.onclick = () => { sfx('tap'); (p.parentNode === tray ? track : tray).append(p); }; return p; };
-    for (let i = 0; i < n + 1; i++) tray.append(pebble());
+    const extra = 1 + Math.floor(Math.random() * 3); // 多給 1～3 顆，不能用數石頭猜答案
+    for (let i = 0; i < n + extra; i++) tray.append(pebble());
     const f = frame(step, () => [rule('step:segment')],
       h('div', { class: 'listen-row' }, h('div', { class: 'pic-card' }, wordPicture(w, 92)), h('button', { class: 'big-round', onClick: say1 }, '再聽一次')),
       h('section', { class: 'hole-box' }, h('div', { class: 'hint' }, '聽到幾節，就放幾顆小石頭到洞口！'), track, h('div', { class: 'tray-row' }, h('span', {}, '我的小石頭'), tray)),
@@ -118,7 +119,8 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
     const showZh = S.settings().meaning;
     const f = frame(step, () => [rule('step:blend')],
       h('div', { class: 'see-word' }, wordPicture(w, 110), h('button', { class: 'word-big', onClick: () => play(wordItem(w)) }, w.word),
-        showZh ? h('div', { class: 'zh' }, w.zh) : null, h('div', { class: 'ipa' }, w.ipa)));
+        showZh && w.zh ? h('div', { class: 'zh-big' }, w.zh) : null, h('div', { class: 'ipa' }, w.ipa)));
+    fitOneLine(main.querySelector('.zh-big'));
     play(wordItem(w)); f.ready();
   }
 
@@ -238,19 +240,24 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
   // 8 判斷類型
   function s8(step) {
     const doors = h('div', { class: 'rooms' });
-    const f = frame(step, () => [...new Set(w.types)].map((t) => rule(TYPES[t].rule)), doors);
+    const below = h('div', { class: 'type-below' });
+    const f = frame(step, () => [...new Set(w.types)].map((t) => rule(TYPES[t].rule)), doors, below);
     let si = 0;
     const draw = () => {
       doors.replaceChildren(...w.syls.map((syl, i) => h('div', { class: 'room' + (i === si ? ' focus' : '') + (i < si ? ' solved' : ''), style: i < si ? { borderColor: TYPES[w.types[i]].color } : null },
         h('div', { class: 'room-letters' }, w.sylText[i]),
         i < si ? h('div', { class: 'room-type', style: { background: TYPES[w.types[i]].color } }, TYPES[w.types[i]].name) : null)));
+      below.replaceChildren();
       if (si >= w.syls.length) { f.ready(); return; }
       const correct = w.types[si];
-      const other = shuffle(['C', 'O', 'E', 'T', 'R', 'D'].filter((x) => x !== correct))[0];
-      doors.append(h('div', { class: 'choices' }, ...shuffle([correct, other]).map((t) => h('button', { class: 'choice door-' + t, onClick: (e) => {
+      // 4 個選項：正確答案＋3 個隨機的其他類型
+      const others = shuffle(Object.keys(TYPES).filter((x) => x !== correct)).slice(0, 3);
+      const opts = h('div', { class: 'choices four' }, ...shuffle([correct, ...others]).map((t) => h('button', { class: 'choice door-' + t, onClick: (e) => {
         if (t !== correct) { miss(8); e.currentTarget.classList.add('shake'); toast(rule(TYPES[correct].rule) ? '提示：' + rule(TYPES[correct].rule).mnemonic : '再看看！', 2400); return; }
-        sfx('ok'); play(syllableItem(w, si)); si++; draw();
-      } }, h('span', { class: 'door-ico' }), TYPES[t].name))));
+        sfx('ok'); play(syllableItem(w, si));
+        opts.replaceChildren(typeExplain(w, si, () => { si++; draw(); }));
+      } }, h('span', { class: 'door-ico' }), TYPES[t].name)));
+      below.append(opts);
     };
     draw();
   }
@@ -341,4 +348,47 @@ export function spellWord(root, w, { onDone, onExit }) {
       h('div', { class: 'slots' }, ...slots), h('div', { class: 'cards' }, ...cards),
       h('p', { class: 'hint' }, '一格放一個音；sh、ee 這種好朋友放在同一格。'), actions)));
   play(wordItem(w));
+}
+
+// 類型答對後：說明「這一節」為什麼是這種類型（標出決定類型的字母）＋口訣
+export function typeExplain(w, i, onNext) {
+  const t = w.types[i]; const syl = w.syls[i];
+  const vi = syl.findIndex((b) => b.vowel);
+  const v = syl[vi];
+  const ph = v ? v.ph : '';
+  const LONG = { a: 'eɪ', e: 'iː', i: 'aɪ', o: 'əʊ', u: 'juː uː', y: 'aɪ' };
+  const isLong = v && (LONG[v.g] || '').split(' ').includes(ph);
+  const key = new Set(vi >= 0 ? [vi] : []); let keyE = false;
+  const after = vi >= 0 ? syl.slice(vi + 1) : [];
+  const cons = after.map((b) => b.g).join('');
+  let text;
+  switch (t) {
+    case 'C': after.forEach((_, k) => key.add(vi + 1 + k)); text = `${v.g} 後面有 ${cons} 擋住，門關上 → ${v.g} 念短音 /${ph}/`; break;
+    case 'O': text = `${v.g} 在這一節的最後面，門打開 → ${v.g} ${isLong ? '念長音' : '念'} /${ph}/`; break;
+    case 'E': { const m = syl.find((b) => b.magic); keyE = true; text = `${v.g} 後面隔一個 ${m ? m.g : ''}，最後的 e 不說話 → ${v.g} 念長音 /${ph}/`; break; }
+    case 'T': text = `${v.g} 幾個母音字母並肩走，合成一個音 /${ph}/`; break;
+    case 'R': text = `${v.g} 裡的 r 管住前面的母音 → 念 /${ph}/，英式 r 不出聲`; break;
+    case 'D': text = `${v.g} 念的時候嘴巴會滑動 → 念 /${ph}/`; break;
+    case 'L': { const c = syl[vi - 1]; if (c) key.add(vi - 1); text = `子音 ${c ? c.g : ''} 抓著 le 一起走 → 念 /${c ? c.ph : ''}əl/`; break; }
+    case 'W': { const tr = (w.tricky || (v && v.g) || '').trim(); text = `${tr} 不照規則，在這裡念 /${ph}/，要特別記住 ❤`; break; }
+    default: text = `念 /${ph}/`;
+  }
+  const r = rule(TYPES[t].rule);
+  const letters = h('div', { class: 'explain-letters' }, ...syl.map((b, k) => h('span', { class: key.has(k) ? (b.vowel ? 'k-v' : 'k-c') : '' },
+    b.silentBefore ? h('span', { class: 'silent' }, b.silentBefore) : null, b.g, b.silentAfter ? h('span', { class: 'silent' }, b.silentAfter) : null,
+    b.magic ? h('span', { class: keyE ? 'k-e' : 'silent' }, 'e') : null)));
+  const speak = text.replace(/\/[^/]*\//g, '').replace(/→/g, '，') + (r ? '。' + r.mnemonic : '');
+  setTimeout(() => say(speak), 1000);
+  return h('div', { class: 'type-explain', style: { '--tc': TYPES[t].color } },
+    h('div', { class: 'explain-head' }, letters, h('span', { class: 'room-type', style: { background: TYPES[t].color } }, TYPES[t].name)),
+    h('p', { class: 'explain-text', onClick: () => say(speak) }, text),
+    r ? h('p', { class: 'explain-rule', onClick: () => say(r.mnemonic) }, '口訣：' + r.mnemonic) : null,
+    h('button', { class: 'btn primary', onClick: () => { stop(); onNext(); } }, i + 1 < w.syls.length ? '下一間 →' : '完成'));
+}
+
+// 中文意思太長時縮小字級，維持一行
+function fitOneLine(el) {
+  if (!el) return;
+  const fit = () => { el.style.fontSize = ''; let size = parseFloat(getComputedStyle(el).fontSize); while (el.scrollWidth > el.clientWidth + 1 && size > 20) { size -= 4; el.style.fontSize = size + 'px'; } };
+  requestAnimationFrame(fit); if (document.fonts) document.fonts.ready.then(fit);
 }

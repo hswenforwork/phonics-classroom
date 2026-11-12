@@ -21,13 +21,39 @@ def done(msg, ok):
     sys.exit(0 if ok else 1)
 
 
-m = re.search(r'```json\s*(\{.*?\})\s*```', body, re.S)
+m = re.search(r"```json\s*(\{.*\})\s*```", body, re.S)
 if not m:
     done('找不到單字資料（```json 區塊）。', False)
 try:
-    d = {k: str(v).strip() for k, v in json.loads(m.group(1)).items()}
+    d = {k: (str(v).strip() if not isinstance(v, list) else v) for k, v in json.loads(m.group(1)).items()}
 except Exception as e:  # noqa: BLE001
     done(f'資料格式錯誤：{e}', False)
+
+# 破音字讀音（家長專區「破音字確認」送出）
+if re.search(r'pc-action:\s*zhuyin', body):
+    items = json.loads(m.group(1)).get('items', [])
+    table = {}
+    for line in open(os.path.join(ROOT, 'fonts', 'src', 'phonic_table_Z.txt'), encoding='utf-8'):
+        p = line.rstrip('\n').split('\t')
+        table[p[0]] = p[3:9]
+    fpath = os.path.join(ROOT, 'data', 'zhuyin-fix.csv')
+    with open(fpath, encoding='utf-8-sig', newline='') as f:
+        fixes = [r for r in csv.DictReader(f)]
+    ok, bad = 0, []
+    for it in items:
+        c, pat, rd = str(it.get('char', '')), str(it.get('pattern', '')), str(it.get('reading', ''))
+        if len(c) != 1 or '*' not in pat or rd not in table.get(c, []):
+            bad.append(f'{c} {pat} {rd}')
+            continue
+        fixes = [r for r in fixes if not (r['char'] == c and r['pattern'] == pat)]
+        fixes.append({'char': c, 'pattern': pat, 'reading': rd})
+        ok += 1
+    fixes.sort(key=lambda r: (r['char'], r['pattern']))
+    with open(fpath, 'w', newline='', encoding='utf-8-sig') as f:
+        w = csv.DictWriter(f, fieldnames=['char', 'pattern', 'reading'], lineterminator='\r\n')
+        w.writeheader()
+        w.writerows(fixes)
+    done(f'已記錄 {ok} 個破音字讀音，約 1～3 分鐘後網站更新。' + (('\n\n沒有寫入（格式不對）：' + '、'.join(bad)) if bad else ''), ok > 0)
 
 word = d.get('word', '').lower()
 errors = []

@@ -2,6 +2,7 @@
 import { DB, PLACES, NODES, DEFAULT_PH, wordsOf, rule } from './data.js';
 import { play, stop, wordItem, syllableItem, sentenceItem, storyItem, say, sfx, setAudioSettings, hasAsset } from './audio.js';
 import { autogen } from './autogen.js';
+import { applyZhuyin } from './zhuyin.js';
 import { h, title, bubble, mascot, toast, confetti, stamps, paw, wordPicture, shuffle, ruleDialog } from './ui.js';
 import { playWord, spellWord } from './word.js';
 import * as S from './store.js';
@@ -334,10 +335,12 @@ export function parentScreen(unlocked) {
         h('p', { class: 'muted' }, '只要輸入一個英文單字，按「自動產生」，工具會查字典並依自然發音規則填好其他欄位；確認後按送出，會開啟 GitHub 的申請單頁面，按 Submit 即可，約 1～3 分鐘後網站更新。欄位寫法見 data/README.md。'),
         h('div', { class: 'row gen-row' }, f.word, h('button', { class: 'btn primary', onClick: () => generate(false) }, '自動產生'), regenBtn),
         status, form),
+      zhuyinCheckPanel(),
       pronCheckPanel((word) => { f.word.value = word; generate(false); f.word.scrollIntoView({ behavior: 'smooth', block: 'center' }); }),
       h('section', { class: 'panel' }, h('h2', {}, '換圖片、換音檔'), h('p', {}, '把同檔名的檔案上傳到 GitHub 對應的資料夾就會自動替換，例如 images/words/rabbit.png、audio/words/rabbit.mp3、audio/rules/L6-13.mp3（口訣語音）。'),
         h('a', { class: 'btn', href: `https://github.com/${REPO}/tree/main/data`, target: '_blank' }, '打開 GitHub 資料夾')),
       h('section', { class: 'panel' }, h('h2', {}, '探險隊員'), ...S.profiles().map((x) => h('div', { class: 'row' }, h('span', { class: 'avatar sm', style: { background: x.color } }, x.name.slice(0, 1)), x.name,
+        h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: x.zhuyin !== false, onChange: (e) => { x.zhuyin = e.target.checked; S.persist(); } }), '顯示注音'),
         h('button', { class: 'btn small', onClick: () => { if (confirm(`確定要刪除 ${x.name} 的進度嗎？`)) { S.removeProfile(x.id); parentScreen(true); } } }, '刪除')))))));
 }
 
@@ -390,11 +393,49 @@ function pronCheckPanel(onEdit) {
     summary, tabs, list);
 }
 
+// ---------- 破音字確認：自動判斷不了的破音字，由家長選讀音 ----------
+const ZY_SENT = 'pc-zhuyin-sent-v1';
+function zhuyinCheckPanel() {
+  let sent = {};
+  try { sent = JSON.parse(localStorage.getItem(ZY_SENT)) || {}; } catch (e) { sent = {}; }
+  const list = h('div', { class: 'pron-list' }, h('p', { class: 'muted' }, '讀取中…'));
+  const info = h('p', {});
+  let rows = [];
+  const send = () => {
+    const pick = rows.filter((r) => r.ok.checked).slice(0, 25);
+    if (!pick.length) return toast('請先勾選「確認」');
+    const items = pick.map((r) => ({ char: r.it.char, pattern: r.it.pattern, reading: r.sel.value }));
+    const body = `pc-action: zhuyin\n\n\`\`\`json\n${JSON.stringify({ items })}\n\`\`\`\n\n送出後，自動流程會把讀音寫進 data/zhuyin-fix.csv。`;
+    window.open(`https://github.com/${REPO}/issues/new?title=${encodeURIComponent('破音字讀音 ' + items.length + ' 個')}&body=${encodeURIComponent(body)}`, '_blank');
+    pick.forEach((r) => { sent[r.it.char + '|' + r.it.pattern] = r.sel.value; });
+    try { localStorage.setItem(ZY_SENT, JSON.stringify(sent)); } catch (e) { /* 忽略 */ }
+    draw(all);
+  };
+  let all = [];
+  function draw(items) {
+    const todo = items.filter((it) => !sent[it.char + '|' + it.pattern]);
+    info.textContent = todo.length ? `還有 ${todo.length} 處要確認（已送出、還沒更新的不列出）。` : '全部確認完了！';
+    rows = todo.map((it) => {
+      const sel = h('select', {}, ...it.readings.map((r) => h('option', { value: r }, r)));
+      const ok = h('input', { type: 'checkbox' });
+      sel.addEventListener('change', () => { ok.checked = true; });
+      const ctx = h('span', { class: 'zy-ctx' }, it.context.slice(0, it.at), h('mark', {}, it.char), it.context.slice(it.at + 1));
+      return { it, sel, ok, el: h('div', { class: 'pron-row' }, ctx, sel, h('label', { class: 'switch' }, ok, '確認')) };
+    });
+    list.replaceChildren(...(rows.length ? rows.map((r) => r.el) : [h('p', { class: 'muted' }, '沒有要確認的破音字')]));
+  }
+  fetch('data/zhuyin-check.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : [])).catch(() => []).then((d) => { all = d; draw(d); });
+  return h('section', { class: 'panel' }, h('h2', {}, '破音字確認'),
+    h('p', { class: 'muted' }, '注音會依常見詞語自動判斷破音字的讀音。下面是判斷不了的地方（黃色是那個字），預設選第一個讀音；選好正確讀音並勾「確認」，再按送出。一次最多送 25 個，網站約 1～3 分鐘後更新。'),
+    info, list, h('button', { class: 'btn primary', onClick: send }, '送出已確認的讀音'));
+}
+
 // ---------- 路由 ----------
 export function go(path) { if (location.hash === '#' + path) route(); else location.hash = path; }
 export function route() {
   stop();
   const [name, a, b] = location.hash.replace(/^#/, '').split('/');
+  applyZhuyin(S.me() ? S.me().zhuyin : true);
   if (!S.me() && name !== 'parent') return profilesScreen();
   switch (name) {
     case 'profiles': return profilesScreen();

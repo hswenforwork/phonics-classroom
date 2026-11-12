@@ -1,6 +1,7 @@
 // 畫面小工具
 import { say, sayRule, sfx } from './audio.js';
 import { hasAsset } from './audio.js';
+import { zy } from './zhuyin.js';
 
 export function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -12,7 +13,7 @@ export function h(tag, attrs, ...kids) {
     else if (k === 'html') el.innerHTML = v;
     else el.setAttribute(k, v === true ? '' : v);
   }
-  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(zy(c)));
   return el;
 }
 

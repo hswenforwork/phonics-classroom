@@ -159,8 +159,8 @@ S6-19,table,6,地道迷宮,🍽️,桌子,ta/ble,t-a/b-le=əl,/ˈteɪ.bəl/,O/L,
 S6-20,apple,6,地道迷宮,🍎,蘋果,ap/ple,a-p/p-le=əl,/ˈæp.əl/,C/L,1,,,Starters,,Y
 S6-21,lion,6,地道迷宮,🦁,獅子,li/on,l-i=aɪ/o=ə-n,/ˈlaɪ.ən/,O/C,1,,,Movers,,Y
 S6-22,hippo,6,地道迷宮,🦛,河馬,hip/po,h-i-p/p-o,/ˈhɪp.əʊ/,C/O,1,,,Starters,,Y
-S6-23,watermelon,6,地道迷宮,🍉,西瓜,wa/ter/mel/on,w-a=ɔː/t-er=ə/m-e-l/o=ə-n,/ˈwɔː.tə.mel.ən/,W/R/C/C,1,a,,Starters,Y,Y
-S6-24,alligator,6,地道迷宮,,鱷魚,al/li/ga/tor,a-l/l-i/g-a=eɪ/t-or=ə,/ˈæl.ɪ.ɡeɪ.tə/,C/O/O/R,1,,,補充,,Y
+S6-23,watermelon,8,星空營地,🍉,西瓜,wa/ter/mel/on,w-a=ɔː/t-er=ə/m-e-l/o=ə-n,/ˈwɔː.tə.mel.ən/,W/R/C/C,1,a,,Starters,,Y
+S6-24,alligator,6,地道迷宮,,鱷魚,al/li/ga/tor,a-l/l-i/g-a=eɪ/t-or=ə,/ˈæl.ɪ.ɡeɪ.tə/,C/O/O/R,1,,,補充,Y,Y
 S6-25,insect,6,地道迷宮,,昆蟲,in/sect,i-n/s-e-c-t,/ˈɪn.sekt/,C/C,1,,,補充,,Y
 S6-26,igloo,6,地道迷宮,,雪屋,ig/loo,i-g/l-oo=uː,/ˈɪɡ.luː/,C/T,1,,,補充,,Y
 S6-27,mitten,6,地道迷宮,,手套,mit/ten,m-i-t/t-e=ə-n,/ˈmɪt.ən/,C/C,1,,,補充,,Y
@@ -188,7 +188,7 @@ S7-14,babies,7,大草原,👶,嬰兒（複數）,ba/bies,b-a/b-ie=i-s=z,/ˈbeɪ.
 S7-15,puppies,7,大草原,🐶,小狗（複數）,pup/pies,p-u-p/p-ie=i-s=z,/ˈpʌp.iz/,C/T,1,,puppy+es|y變i,Movers,,Y
 S7-16,jumped,7,大草原,🦘,跳了,jumped,j-u-m-p-ed=t,/dʒʌmpt/,C,1,,jump+ed|/t/,Starters,,Y
 S7-17,played,7,大草原,🎮,玩了,played,p-l-ay-ed=d,/pleɪd/,T,1,,play+ed|/d/,Starters,,Y
-S7-18,wanted,7,大草原,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
+S7-18,wanted,8,星空營地,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
 S7-19,leaves,7,大草原,🍂,葉子（複數）,leaves,l-ea-v-es=z,/liːvz/,T,1,,leaf+ves|f變ves,Movers,,Y
 S7-20,mice,7,大草原,🐭,老鼠（複數）,mice,m-i-c=s(e),/maɪs/,E,1,,mouse→mice|不規則,Starters,,Y
 S7-21,teeth,7,大草原,🦷,牙齒（複數）,teeth,t-ee-th,/tiːθ/,T,1,,tooth→teeth|不規則,Movers,,Y

@@ -1,4 +1,4 @@
-# 處理家長專區送出的單字申請單，寫進 data/words.csv
+# 處理家長專區送出的單字申請單（寫進 data/words.csv）與破音字讀音（寫進 data/zhuyin-fix.csv）
 # 安全：只處理 repo 擁有者自己開的申請單
 name: 單字申請單
 
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/words.csv
+          git add data/words.csv data/zhuyin-fix.csv
           if git diff --cached --quiet; then echo "沒有變更"; else git commit -m "單字申請單 #${{ github.event.issue.number }}" && (git push || (git pull --rebase && git push)); fi
       - name: 回覆並關閉申請單
         env:
