@@ -39,7 +39,7 @@ S2-02,fish,2,沙丘,🐟,魚,fish,f-i-sh,/fɪʃ/,C,1,,,Starters,,Y
 S2-03,shop,2,沙丘,🏪,商店,shop,sh-o-p,/ʃɒp/,C,1,,,Starters,,Y
 S2-04,shell,2,沙丘,🐚,貝殼,shell,sh-e-ll,/ʃel/,C,1,,,Starters,,Y
 S2-05,chick,2,沙丘,🐥,小雞,chick,ch-i-ck,/tʃɪk/,C,1,,,補充,,Y
-S2-06,chips,2,沙丘,🍟,薯條,chips,ch-i-p-s,/tʃɪps/,C,1,,chip+s,Starters,,Y
+S2-06,chips,7,大草原,🍟,薯條,chips,ch-i-p-s,/tʃɪps/,C,1,,chip+s,Starters,,Y
 S2-07,lunch,2,沙丘,🍱,午餐,lunch,l-u-n-ch,/lʌntʃ/,C,1,,,Starters,,Y
 S2-08,maths,2,沙丘,🧮,數學,maths,m-a-th-s,/mæθs/,C,1,,,Flyers,,Y
 S2-09,think,2,沙丘,💭,想,think,th-i-n=ŋ-k,/θɪŋk/,C,1,,,Movers,,Y
@@ -126,7 +126,7 @@ S5-03,snake,5,綠洲水塘,🐍,蛇,snake,s-n-a-k(e),/sneɪk/,E,1,,,Starters,,Y
 S5-04,bike,5,綠洲水塘,🚲,腳踏車,bike,b-i-k(e),/baɪk/,E,1,,,Starters,,Y
 S5-05,kite,5,綠洲水塘,🪁,風箏,kite,k-i-t(e),/kaɪt/,E,1,,,Starters,,Y
 S5-06,five,5,綠洲水塘,5️⃣,五,five,f-i-v(e),/faɪv/,E,1,,,Starters,,Y
-S5-07,smile,5,綠洲水塘,😊,微笑,smile,s-m-i-l(e),/smaɪl/,E,1,,,Starters,,Y
+S5-07,smile,5,綠洲水塘,😊,微笑,smile,s-m-i-l(e),/smaɪl/,E,1,,,Starters,Y,Y
 S5-08,home,5,綠洲水塘,🏡,家,home,h-o-m(e),/həʊm/,E,1,,,Starters,,Y
 S5-09,nose,5,綠洲水塘,👃,鼻子,nose,n-o-s=z(e),/nəʊz/,E,1,,,Starters,,Y
 S5-10,bone,5,綠洲水塘,🦴,骨頭,bone,b-o-n(e),/bəʊn/,E,1,,,補充,,Y
@@ -135,13 +135,13 @@ S5-12,phone,5,綠洲水塘,📱,電話,phone,ph-o-n(e),/fəʊn/,E,1,,,Starters,,
 S5-13,face,5,綠洲水塘,🙂,臉,face,f-a-c=s(e),/feɪs/,E,1,,,Starters,,Y
 S5-14,rice,5,綠洲水塘,🍚,米飯,rice,r-i-c=s(e),/raɪs/,E,1,,,Starters,,Y
 S5-15,page,5,綠洲水塘,📄,一頁,page,p-a-g=dʒ(e),/peɪdʒ/,E,1,,,Starters,,Y
-S5-16,city,5,綠洲水塘,🏙️,城市,cit/y,c=s-i-t/y=i,/ˈsɪt.i/,C/O,1,,,Movers,,Y
+S5-16,city,6,地道迷宮,🏙️,城市,cit/y,c=s-i-t/y=i,/ˈsɪt.i/,C/O,1,,,Movers,,Y
 S5-17,fly,5,綠洲水塘,🪰,飛,fly,f-l-y=aɪ,/flaɪ/,O,1,,,Starters,,Y
 S5-18,cry,5,綠洲水塘,😢,哭,cry,c-r-y=aɪ,/kraɪ/,O,1,,,Movers,,Y
-S5-19,baby,5,綠洲水塘,👶,嬰兒,ba/by,b-a/b-y=i,/ˈbeɪ.bi/,O/O,1,,,Starters,,Y
-S5-20,bread,5,綠洲水塘,🍞,麵包,bread,b-r-ea=e-d,/bred/,T,1,,,Starters,,Y
-S5-21,snow,5,綠洲水塘,☃️,雪,snow,s-n-ow,/snəʊ/,T,1,,,Movers,,Y
-S5-22,school,5,綠洲水塘,🏫,學校,school,s-ch=k-oo-l,/skuːl/,T,1,,,Starters,Y,Y
+S5-19,baby,6,地道迷宮,👶,嬰兒,ba/by,b-a/b-y=i,/ˈbeɪ.bi/,O/O,1,,,Starters,,Y
+S5-20,bread,4,岩石瞭望台,🍞,麵包,bread,b-r-ea=e-d,/bred/,T,1,,,Starters,,Y
+S5-21,snow,4,岩石瞭望台,☃️,雪,snow,s-n-ow,/snəʊ/,T,1,,,Movers,,Y
+S5-22,school,4,岩石瞭望台,🏫,學校,school,s-ch=k-oo-l,/skuːl/,T,1,,,Starters,,Y
 S6-01,rabbit,6,地道迷宮,🐰,兔子,rab/bit,r-a-b/b-i-t,/ˈræb.ɪt/,C/C,1,,,Movers,,Y
 S6-02,kitten,6,地道迷宮,🐱,小貓,kit/ten,k-i-t/t-e=ə-n,/ˈkɪt.ən/,C/C,1,,,Movers,,Y
 S6-03,picnic,6,地道迷宮,🧺,野餐,pic/nic,p-i-c/n-i-c,/ˈpɪk.nɪk/,C/C,1,,,Movers,,Y
@@ -155,7 +155,7 @@ S6-10,lemon,6,地道迷宮,🍋,檸檬,lem/on,l-e-m/o=ə-n,/ˈlem.ən/,C/C,1,,,S
 S6-11,camel,6,地道迷宮,🐫,駱駝,cam/el,c-a-m/e=ə-l,/ˈkæm.əl/,C/C,1,,,Flyers,,Y
 S6-12,seven,6,地道迷宮,7️⃣,七,sev/en,s-e-v/e=ə-n,/ˈsev.ən/,C/C,1,,,Starters,,Y
 S6-13,sunflower,6,地道迷宮,🌻,向日葵,sun/flow/er,s-u-n/f-l-ow=aʊ/er=ə,/ˈsʌn.flaʊ.ə/,C/D/R,1,,,補充,,Y
-S6-14,football,6,地道迷宮,⚽,足球,foot/ball,f-oo=ʊ-t/b-a=ɔː-ll,/ˈfʊt.bɔːl/,T/W,1,,,Starters,,Y
+S6-14,football,8,星空營地,⚽,足球,foot/ball,f-oo=ʊ-t/b-a=ɔː-ll,/ˈfʊt.bɔːl/,T/W,1,,,Starters,,Y
 S6-15,cupcake,6,地道迷宮,🧁,杯子蛋糕,cup/cake,c-u-p/c-a-k(e),/ˈkʌp.keɪk/,C/E,1,,,補充,,Y
 S6-16,rainbow,6,地道迷宮,🌈,彩虹,rain/bow,r-ai-n/b-ow,/ˈreɪn.bəʊ/,T/T,1,,,Movers,,Y
 S6-17,monster,6,地道迷宮,👾,怪獸,mon/ster,m-o-n/s-t-er=ə,/ˈmɒn.stə/,C/R,1,,,Starters,,Y
@@ -200,9 +200,9 @@ S7-23,otter,7,大草原,🦦,水獺,ott/er,o-tt=t/er=ə,/ˈɒt.ə/,C/R,1,,ott+er
 S7-24,tying,7,大草原,🎀,綁（正在綁）,ty/ing,t-y=aɪ/i-ng,/ˈtaɪ.ɪŋ/,O/C,1,,tie+ing|ie變y,補充,,Y
 S7-25,lying,7,大草原,🛌,躺（正在躺）,ly/ing,l-y=aɪ/i-ng,/ˈlaɪ.ɪŋ/,O/C,1,,lie+ing|ie變y,補充,,Y
 S8-01,banana,8,星空營地,🍌,香蕉,ba/na/na,b-a=ə/n-a=ɑː/n-a=ə,/bəˈnɑː.nə/,O/O/O,2,,,Starters,,Y
-S8-02,teacher,8,星空營地,🧑‍🏫,老師,tea/cher,t-ea/ch-er=ə,/ˈtiː.tʃə/,T/R,1,,,Starters,,Y
-S8-03,doctor,8,星空營地,🧑‍⚕️,醫生,doc/tor,d-o-c/t-or=ə,/ˈdɒk.tə/,C/R,1,,,Movers,,Y
-S8-04,sister,8,星空營地,👧,姊妹,sis/ter,s-i-s/t-er=ə,/ˈsɪs.tə/,C/R,1,,,Starters,,Y
+S8-02,teacher,6,地道迷宮,🧑‍🏫,老師,tea/cher,t-ea/ch-er=ə,/ˈtiː.tʃə/,T/R,1,,,Starters,,Y
+S8-03,doctor,6,地道迷宮,🧑‍⚕️,醫生,doc/tor,d-o-c/t-or=ə,/ˈdɒk.tə/,C/R,1,,,Movers,,Y
+S8-04,sister,6,地道迷宮,👧,姊妹,sis/ter,s-i-s/t-er=ə,/ˈsɪs.tə/,C/R,1,,,Starters,,Y
 S8-05,computer,8,星空營地,💻,電腦,com/pu/ter,c-o=ə-m/p-u=juː/t-er=ə,/kəmˈpjuː.tə/,C/O/R,2,,,Starters,Y,Y
 S8-06,knee,8,星空營地,🦵,膝蓋,knee,[k]n-ee,/niː/,T,1,k,,Flyers,,Y
 S8-07,knife,8,星空營地,🔪,刀子,knife,[k]n-i-f(e),/naɪf/,E,1,k,,Flyers,,Y
@@ -227,7 +227,7 @@ S8-23,one,8,星空營地,1️⃣,一,one,o=wʌ-n[e],/wʌn/,W,1,one,,Starters,,Y
 S8-24,friend,8,星空營地,🧑‍🤝‍🧑,朋友,friend,f-r-ie=e-n-d,/frend/,W,1,i,,Starters,,Y
 S8-25,people,8,星空營地,👥,人們,peo/ple,p-eo=iː/p-le=əl,/ˈpiː.pəl/,W/L,1,eo,,Starters,,Y
 S8-26,eye,8,星空營地,👁️,眼睛,eye,eye=aɪ,/aɪ/,W,1,eye,,Starters,,Y
-S8-27,elephant,8,星空營地,🐘,大象,el/e/phant,e-l/e=ɪ/ph=f-a=ə-n-t,/ˈel.ɪ.fənt/,C/O/C,1,,,補充,,Y
+S8-27,elephant,6,地道迷宮,🐘,大象,el/e/phant,e-l/e=ɪ/ph=f-a=ə-n-t,/ˈel.ɪ.fənt/,C/O/C,1,,,補充,,Y
 S8-28,eight,8,星空營地,,八,eight,eigh=eɪ-t,/eɪt/,W,1,,,補充,,Y
 S8-29,juice,8,星空營地,🧃,果汁,juice,j=dʒ-ui=uː-c=s[e],/dʒuːs/,W,1,ui,,補充,,Y
 S8-30,octopus,8,星空營地,🐙,章魚,oc/to/pus,o=ɒ-c/t-o=ə/p-u=ə-s,/ˈɒk.tə.pəs/,W/O/C,1,o,,補充,,Y
