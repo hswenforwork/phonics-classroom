@@ -1,6 +1,6 @@
 // 各個畫面
 import { DB, PLACES, NODES, DEFAULT_PH, wordsOf, rule } from './data.js';
-import { play, stop, wordItem, sentenceItem, say, sfx, setAudioSettings } from './audio.js';
+import { play, stop, wordItem, syllableItem, sentenceItem, storyItem, say, sfx, setAudioSettings, hasAsset } from './audio.js';
 import { autogen } from './autogen.js';
 import { h, title, bubble, mascot, toast, confetti, stamps, paw, wordPicture, shuffle, ruleDialog } from './ui.js';
 import { playWord, spellWord } from './word.js';
@@ -142,7 +142,7 @@ function tabSentences(body, no) {
   const list = DB.sentences.filter((s) => +s.stage === no);
   body.append(title('讀讀看，點一個字聽它怎麼唸！'), ...list.map((s) => h('div', { class: 'sentence' },
     h('div', { class: 'sent-words' }, ...s.text.split(/\s+/).map((tok) => h('button', { class: 'sw', onClick: () => play(wordItem(tok.replace(/[^A-Za-z']/g, '').toLowerCase())) }, tok))),
-    h('button', { class: 'btn', onClick: () => play(sentenceItem(s.id, s.text)) }, '聽整句'),
+    h('button', { class: 'btn', onClick: () => play(sentenceItem(s.id)) }, '聽整句'),
     S.settings().meaning ? h('small', { class: 'zh' }, s.meaning_zh) : null)));
 }
 function tabStory(body, no) {
@@ -159,7 +159,7 @@ function tabStory(body, no) {
         S.settings().meaning ? h('small', { class: 'zh' }, pg.meaning_zh) : null),
       h('div', { class: 'story-nav' },
         h('button', { class: 'btn', disabled: k === 0, onClick: () => { k--; draw(); } }, '上一頁'),
-        h('button', { class: 'btn', onClick: () => play({ urls: [], text: pg.text, ttsRate: 0.8 }) }, '聽這一頁'),
+        h('button', { class: 'btn', onClick: () => play(storyItem(pg.stage, pg.page)) }, '聽這一頁'),
         h('span', {}, `${k + 1} / ${pages.length}`),
         h('button', { class: 'btn primary', disabled: k + 1 >= open, onClick: () => { k++; draw(); } }, k + 1 >= open && k + 1 < pages.length ? '多探險幾個字解鎖' : '下一頁')));
   };
@@ -275,8 +275,8 @@ export function parentScreen(unlocked) {
   const regenBtn = h('button', { class: 'btn small', hidden: true, onClick: () => generate(true) }, '重新自動產生');
   const form = h('div', { class: 'gen-form', hidden: true },
     h('div', { class: 'form-grid' }, ...Object.keys(LABELS).map((k) => rows[k])),
-    h('p', { class: 'muted' }, '黃色欄位是工具沒把握的地方，請看下方說明再確認。送出後，網站會自動用英式語音產生這個字和每個音節的音檔。'),
-    h('div', { class: 'row' }, h('button', { class: 'btn', onClick: () => preview() }, '🔊 試聽'), h('button', { class: 'btn primary', onClick: () => submit() }, '送出到 GitHub')));
+    h('p', { class: 'muted' }, '黃色欄位是工具沒把握的地方，請看下方說明再確認。送出後會自動依音標產生英式語音（約 3～5 分鐘）；語音產生好之前，這個字不會出現在孩子的練習裡。產生後請到「發音檢查」聽一次。'),
+    h('div', { class: 'row' }, h('button', { class: 'btn primary', onClick: () => submit() }, '送出到 GitHub')));
   // 欄位一改就取消黃色提示（家長已確認）
   Object.keys(LABELS).forEach((k) => f[k].addEventListener('input', () => mark(k, '')));
   f.stage.addEventListener('change', () => mark('stage', ''));
@@ -295,7 +295,7 @@ export function parentScreen(unlocked) {
   async function generate(force) {
     const word = f.word.value.trim().toLowerCase();
     if (!/^[a-z]+$/.test(word)) return toast('請輸入一個英文單字（只用字母）');
-    const old = DB.words.find((w) => w.word === word);
+    const old = DB.allWords.find((w) => w.word === word);
     regenBtn.hidden = !old;
     if (old && !force) {
       fill(old); form.hidden = false;
@@ -314,15 +314,6 @@ export function parentScreen(unlocked) {
       showStatus((old ? `這個字已經在第 ${old.stage} 站，以下是重新自動產生的內容（送出會覆蓋舊的）。` : '已自動產生。') + (n ? `有 ${n} 個欄位請特別確認（黃色）。` : '請確認後送出。'));
     } catch (e) { showStatus('自動產生失敗：' + (e.message || e)); }
     finally { busy = false; }
-  }
-  // 試聽：用瀏覽器的英式語音念整個字，再一節一節念
-  function preview() {
-    const word = f.word.value.trim(); if (!word) return;
-    const syls = f.syllables.value.split('/').map((s) => s.trim()).filter(Boolean);
-    const old = DB.words.find((w) => w.word === word);
-    const items = [old ? wordItem(old) : { urls: [], text: word, ttsRate: 0.8 }];
-    if (syls.length > 1) syls.forEach((s) => items.push({ pause: 400 }, { urls: [], text: s, ttsRate: 0.7 }));
-    play(items);
   }
   const submit = () => {
     const data = Object.fromEntries(Object.entries(f).map(([k, el]) => [k, el.value.trim()]));
@@ -343,10 +334,60 @@ export function parentScreen(unlocked) {
         h('p', { class: 'muted' }, '只要輸入一個英文單字，按「自動產生」，工具會查字典並依自然發音規則填好其他欄位；確認後按送出，會開啟 GitHub 的申請單頁面，按 Submit 即可，約 1～3 分鐘後網站更新。欄位寫法見 data/README.md。'),
         h('div', { class: 'row gen-row' }, f.word, h('button', { class: 'btn primary', onClick: () => generate(false) }, '自動產生'), regenBtn),
         status, form),
+      pronCheckPanel((word) => { f.word.value = word; generate(false); f.word.scrollIntoView({ behavior: 'smooth', block: 'center' }); }),
       h('section', { class: 'panel' }, h('h2', {}, '換圖片、換音檔'), h('p', {}, '把同檔名的檔案上傳到 GitHub 對應的資料夾就會自動替換，例如 images/words/rabbit.png、audio/words/rabbit.mp3、audio/rules/L6-13.mp3（口訣語音）。'),
         h('a', { class: 'btn', href: `https://github.com/${REPO}/tree/main/data`, target: '_blank' }, '打開 GitHub 資料夾')),
       h('section', { class: 'panel' }, h('h2', {}, '探險隊員'), ...S.profiles().map((x) => h('div', { class: 'row' }, h('span', { class: 'avatar sm', style: { background: x.color } }, x.name.slice(0, 1)), x.name,
         h('button', { class: 'btn small', onClick: () => { if (confirm(`確定要刪除 ${x.name} 的進度嗎？`)) { S.removeProfile(x.id); parentScreen(true); } } }, '刪除')))))));
+}
+
+// ---------- 發音檢查：逐字聽單字與音節，確認 Google 有照音標念 ----------
+// 進度存在這台裝置；語音重新產生（音標改了）後自動回到「待檢查」
+const CHECK_KEY = 'pc-pron-check-v1';
+function pronCheckPanel(onEdit) {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(CHECK_KEY)) || {}; } catch (e) { saved = {}; }
+  const save = () => { try { localStorage.setItem(CHECK_KEY, JSON.stringify(saved)); } catch (e) { /* 忽略 */ } };
+  let gen = null; let filter = 'todo';
+  const list = h('div', { class: 'pron-list' }, h('p', { class: 'muted' }, '讀取中…'));
+  const summary = h('p', {});
+  const files = (w) => ['audio/words/' + w.word + '.mp3', ...(w.sylText.length > 1 ? w.sylText.map((_, i) => 'audio/syllables/' + w.word + '-' + i + '.mp3') : [])];
+  const fp = (w) => files(w).map((f) => (gen && gen[f]) || (hasAsset(f) ? 'file' : '')).join('|');
+  const state = (w) => {
+    if (!files(w).every(hasAsset)) return 'none';
+    const s = saved[w.word];
+    return s && s.fp === fp(w) ? (s.ok ? 'ok' : 'bad') : 'todo';
+  };
+  const mark = (w, ok) => { saved[w.word] = { fp: fp(w), ok }; save(); draw(); };
+  const LABEL = { todo: '待檢查', ok: '✓ 正確', bad: '✗ 有問題', none: '語音還沒產生' };
+  function row(w) {
+    const st = state(w);
+    const syl = w.sylText.length > 1 ? w.sylText.map((t, i) => h('button', { class: 'btn small', disabled: st === 'none', onClick: () => play(syllableItem(w, i)) }, '🔊 ' + t)) : [];
+    return h('div', { class: 'pron-row ' + st },
+      h('button', { class: 'btn small', disabled: st === 'none', onClick: () => play(wordItem(w)) }, '🔊 ' + w.word),
+      ...syl,
+      h('span', { class: 'pron-ipa' }, w.ipa),
+      w.aligned ? null : h('span', { class: 'pron-warn', title: '音格的讀音和音標對不上，孩子點格子聽到的音可能跟整字不同' }, '⚠ 音格對不上音標'),
+      h('span', { class: 'pron-state' }, LABEL[st]),
+      st === 'none' ? null : h('button', { class: 'btn small', onClick: () => mark(w, true) }, '✓'),
+      st === 'none' ? null : h('button', { class: 'btn small', onClick: () => mark(w, false) }, '✗'),
+      h('button', { class: 'btn small', onClick: () => onEdit(w.word) }, '修改'));
+  }
+  function draw() {
+    const all = DB.allWords;
+    const count = (k) => all.filter((w) => state(w) === k).length;
+    summary.textContent = `共 ${all.length} 字：待檢查 ${count('todo')}、正確 ${count('ok')}、有問題 ${count('bad')}、語音還沒產生 ${count('none')}`;
+    const ws = all.filter((w) => filter === 'all' || state(w) === filter);
+    list.replaceChildren(...(ws.length ? ws.map(row) : [h('p', { class: 'muted' }, '沒有符合的字')]));
+  }
+  const tabs = h('div', { class: 'row' }, ...[['todo', '待檢查'], ['bad', '有問題'], ['none', '語音還沒產生'], ['ok', '正確'], ['all', '全部']].map(([k, n]) =>
+    h('button', { class: 'btn small' + (k === filter ? ' primary' : ''), onClick: (e) => { filter = k; tabs.querySelectorAll('.btn').forEach((b) => b.classList.remove('primary')); e.currentTarget.classList.add('primary'); draw(); } }, n)));
+  const missing = DB.sounds.filter((x) => !hasAsset('audio/sounds/' + x.sound_id + '.mp3'));
+  fetch('audio/generated.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((g) => { gen = g; draw(); });
+  return h('section', { class: 'panel' }, h('h2', {}, '發音檢查'),
+    h('p', { class: 'muted' }, '每個字聽一次整字和每個音節，確認念法跟音標一樣再按 ✓；不對就按 ✗，再按「修改」改音標後送出，語音會重新產生並回到「待檢查」。語音還沒產生的字不會出現在孩子的練習裡。檢查進度只存在這台裝置。'),
+    missing.length ? h('p', { class: 'gen-status' }, '還沒有錄音的單音（格子會顯示灰色）：' + missing.map((x) => `${x.ipa}（上傳 audio/sounds/${x.sound_id}.mp3）`).join('、')) : null,
+    summary, tabs, list);
 }
 
 // ---------- 路由 ----------

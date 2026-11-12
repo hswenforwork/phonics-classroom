@@ -1,11 +1,12 @@
-# 自動產生新單字的英式語音（Google Cloud Text-to-Speech，en-GB-Neural2-C）
+# 自動產生全站英文語音（Google Cloud Text-to-Speech，en-GB-Neural2-C）：字庫單字與音節依英式音標念，句子、故事也一起產生
+# 有語音沒產生（例如音標有 Google 不認得的符號）時，這個流程會顯示失敗，原因寫在執行結果的 Summary
 # 需要 repo secret：GOOGLE_TTS_API_KEY（Settings → Secrets and variables → Actions）
 name: 產生語音
 
 on:
   push:
     branches: [main]
-    paths: [data/words.csv]
+    paths: [data/words.csv, data/sentences.csv, data/stories.csv, data/pairs.csv]
   workflow_run:
     workflows: [單字申請單]
     types: [completed]
@@ -27,10 +28,12 @@ jobs:
         with:
           ref: main
       - name: 產生語音
+        id: gen
         env:
           GOOGLE_TTS_API_KEY: ${{ secrets.GOOGLE_TTS_API_KEY }}
         run: python3 scripts/build_audio.py
       - name: 存檔並推送
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

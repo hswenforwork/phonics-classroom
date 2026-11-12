@@ -267,3 +267,13 @@ table { border-collapse: collapse; } td, th { border-bottom: 1px solid var(--lin
 .form-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .form-grid label { min-width: 0; }
 .form-grid input, .form-grid select { width: 100%; box-sizing: border-box; min-width: 0; }
+/* 單音還沒有錄音：格子的讀音顯示灰色 */
+.seat.mute .ph { color: #9a9a9a; text-decoration: line-through dotted; }
+.seat.mute::after { content: '🔇'; position: absolute; top: 2px; right: 4px; font-size: 12px; opacity: .6; }
+.seat { position: relative; }
+/* 家長專區：發音檢查 */
+.pron-list { display: flex; flex-direction: column; gap: 6px; max-height: 520px; overflow: auto; margin-top: 8px; }
+.pron-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 10px; background: #fff; }
+.pron-row.ok { background: #eaf7e6; } .pron-row.bad { background: #fde6e2; } .pron-row.none { opacity: .65; }
+.pron-ipa { font-family: 'Noto Sans', sans-serif; color: #555; } .pron-state { font-size: 13px; color: #777; margin-left: auto; }
+.pron-warn { font-size: 12.5px; color: #a35a00; background: #fff3a8; border-radius: 6px; padding: 1px 6px; }

@@ -28,6 +28,7 @@ export const DEFAULT_PH = {
   a: 'æ', e: 'e', i: 'ɪ', o: 'ɒ', u: 'ʌ', qu: 'kw',
   sh: 'ʃ', ch: 'tʃ', th: 'θ', ng: 'ŋ', ph: 'f', ck: 'k', ll: 'l', ss: 's', zz: 'z', ff: 'f', tch: 'tʃ', dge: 'dʒ', wh: 'w',
   ai: 'eɪ', ay: 'eɪ', ee: 'iː', ea: 'iː', igh: 'aɪ', ie: 'aɪ', oa: 'əʊ', ow: 'əʊ', oo: 'uː', ou: 'aʊ', oi: 'ɔɪ', oy: 'ɔɪ', oe: 'əʊ', ue: 'uː', ew: 'uː',
+  bb: 'b', dd: 'd', gg: 'ɡ', mm: 'm', nn: 'n', pp: 'p', rr: 'r', tt: 't',
   ar: 'ɑː', or: 'ɔː', ir: 'ɜː', ur: 'ɜː', er: 'ɜː', air: 'eə', ear: 'ɪə', le: 'əl', ed: 'd', es: 'ɪz', all: 'ɔːl', eo: 'iː', eye: 'aɪ',
 };
 const VOWEL_PH = /^(æ|e|ɪ|ɒ|ʌ|eɪ|iː|aɪ|əʊ|uː|ʊ|juː|ɑː|ɔː|ɜː|eə|ɪə|aʊ|ɔɪ|ə|i|əl|ɪz|wʌ|ɔːl)$/;
@@ -55,7 +56,63 @@ export function parseBox(tok) {
   if (!m) return { g: tok, ph: '', vowel: false, bad: true };
   const [, sb, g, ov, magic, sa] = m;
   const ph = ov || DEFAULT_PH[g] || '';
-  return { g, ph, vowel: VOWEL_PH.test(ph), silentBefore: sb || '', silentAfter: sa || '', magic: !!magic };
+  return { g, ph, vowel: VOWEL_PH.test(ph), silentBefore: sb || '', silentAfter: sa || '', magic: !!magic, explicit: !!ov };
+}
+
+// 把音標切成一個個音素（多字元的雙母音、長母音、tʃ、dʒ 算一個）
+const IPA_UNITS = ['juː', 'eɪ', 'aɪ', 'ɔɪ', 'əʊ', 'aʊ', 'ɪə', 'eə', 'ʊə', 'iː', 'ɑː', 'ɔː', 'uː', 'ɜː', 'tʃ', 'dʒ'];
+const IPA_V = /^(juː|eɪ|aɪ|ɔɪ|əʊ|aʊ|ɪə|eə|ʊə|iː|ɑː|ɔː|uː|ɜː|[æeɪɒʌʊəi])$/;
+export function ipaTokens(ipa) {
+  const s = String(ipa || '').replace(/[\/ˈˌ.\s]/g, '').replace(/g/g, 'ɡ');
+  const out = [];
+  for (let i = 0; i < s.length;) {
+    const u = IPA_UNITS.find((x) => s.startsWith(x, i)) || s[i];
+    out.push(u); i += u.length;
+  }
+  return out;
+}
+// 依字庫音標，決定每一格實際念什麼（沒寫 =音 的格子才調整）。
+// 例如 cake 的 a、bone 的 o、baby 的 a 是長音，camel 的 e 是弱讀 /ə/。對不起來就維持原樣。
+export function alignIpa(syls, ipa) {
+  const tk = ipaTokens(ipa);
+  if (!tk.length) return false;
+  const boxes = syls.flat();
+  const plan = []; let pos = 0;
+  for (let k = 0; k < boxes.length; k++) {
+    const b = boxes[k]; const prev = boxes[k - 1];
+    let n = 0; let acc = '';
+    while (pos + n < tk.length && acc.length < b.ph.length) acc += tk[pos + n++];
+    if (b.ph && acc === b.ph) { plan.push(b.ph); pos += n; continue; }
+    if (b.ph && tk[pos] && tk[pos].length > b.ph.length && tk[pos].startsWith(b.ph)) { plan.push(b.ph); tk[pos] = tk[pos].slice(b.ph.length); continue; } // you：/juː/ 的 j 給 y
+    const t = tk[pos];
+    if (prev && prev.g === b.g && !b.vowel && plan[k - 1] !== undefined && t !== b.ph) { plan.push(plan[k - 1]); continue; } // rab/bit 的第二個 b
+    if (t === undefined) return false;
+    const tv = IPA_V.test(t);
+    const spellV = /^[aeiouy]/.test(b.g) || /^(ar|or|er|ir|ur)$/.test(b.g);
+    if (b.explicit) return false;
+    if (tv && (b.vowel || spellV)) {
+      // 母音格：可能吃兩個音素（le → əl、y → i）
+      if (b.g === 'le' && tk[pos + 1] === 'l') { plan.push(t + 'l'); pos += 2; continue; }
+      plan.push(t); pos += 1; continue;
+    }
+    if (!tv && !b.vowel && !spellV) { plan.push(t); pos += 1; continue; }
+    return false;
+  }
+  if (pos !== tk.length) return false;
+  boxes.forEach((b, k) => { if (!b.explicit && plan[k] && plan[k] !== b.ph) { b.ph = plan[k]; b.vowel = VOWEL_PH.test(b.ph); b.aligned = true; } });
+  markLong(syls);
+  return true;
+}
+// 單一母音字母念長音：同一節有魔法 e → magicVowel；否則（開音節）→ longOpen。讓提示視窗找對口訣
+const LONG_PH = { a: 'eɪ', e: 'iː', i: 'aɪ', o: 'əʊ', u: 'juː|uː' };
+function markLong(syls) {
+  for (const syl of syls) {
+    const magic = syl.some((x) => x.magic);
+    for (const b of syl) {
+      if (!LONG_PH[b.g] || !new RegExp('^(' + LONG_PH[b.g] + ')$').test(b.ph)) continue;
+      if (magic) b.magicVowel = true; else b.longOpen = true;
+    }
+  }
 }
 
 export function parseSounds(s) {
@@ -93,11 +150,13 @@ const COMPOUNDS = new Set(['sunflower', 'football', 'cupcake', 'rainbow']);
 
 function enrichWord(r) {
   const syls = parseSounds(r.sounds);
+  const aligned = alignIpa(syls, r.ipa);
+  markLong(syls);
   const types = r.types.split('/');
   const w = {
     id: r.id, word: r.word, stage: +r.stage, emoji: r.emoji, zh: r.meaning_zh,
     sylText: r.syllables.split('/'), syls, types, ipa: r.ipa, stress: +r.stress || 1,
-    tricky: r.tricky, suffix: r.suffix, source: r.source, boss: r.boss === 'Y', compound: COMPOUNDS.has(r.word),
+    tricky: r.tricky, suffix: r.suffix, source: r.source, boss: r.boss === 'Y', compound: COMPOUNDS.has(r.word), aligned,
   };
   w.boxes = syls.flat();
   if (w.suffix) {
@@ -155,13 +214,14 @@ async function load(name) {
   return parseCSV(await r.text());
 }
 
-export const DB = { words: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
+export const DB = { words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
 
 export async function loadAll() {
   const [words, sentences, stories, pairs, rules, sounds] = await Promise.all(
     ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv'].map(load));
   DB.words = words.filter((r) => r.checked !== 'N' && r.word).map(enrichWord);
   DB.byId = Object.fromEntries(DB.words.map((w) => [w.id, w]));
+  DB.allWords = DB.words;
   DB.sentences = sentences.filter((r) => r.checked !== 'N');
   DB.stories = stories.filter((r) => r.checked !== 'N');
   DB.pairs = pairs;
@@ -171,12 +231,17 @@ export async function loadAll() {
   for (const s of sounds) DB.soundByIpa[s.ipa.replace(/\//g, '')] = s;
 }
 
+// 孩子練習只用已經有語音的字（DB.allWords 保留全部，給家長專區用）
+export function onlyReadyWords(isReady) { DB.words = DB.allWords.filter(isReady); }
 export const wordsOf = (stage) => DB.words.filter((w) => w.stage === stage);
 export const rule = (key) => DB.ruleByKey[key];
 
 // 找一格拼法對應的規則（第 5、9 步的提示視窗）
 export function ruleForBox(b) {
   if (b.magic) return rule('g:' + b.g + '-e') || rule('type:E');
+  if (b.magicVowel) return rule('g:' + b.g + '-e') || rule('type:E');
+  if (b.longOpen) return rule('g:' + b.g + ':' + b.ph) || rule('type:O');
   return rule('g:' + b.g + ':' + b.ph) || (b.g === 'y' && rule('y:' + b.ph)) || (b.ph === 'ə' && rule('g:ə')) || rule('g:' + b.g)
-    || ({ ur: rule('g:ir'), le: rule('type:L'), eo: rule('tricky'), eye: rule('tricky') })[b.g] || (b.ph === 'ɜː' && rule('g:ir')) || null;
+    || ({ ur: rule('g:ir'), le: rule('type:L'), eo: rule('tricky'), eye: rule('tricky') })[b.g] || (b.ph === 'ɜː' && rule('g:ir'))
+    || (b.vowel && b.g.length > 1 && rule(/r$/.test(b.g) ? 'type:R' : 'type:T')) || null;
 }

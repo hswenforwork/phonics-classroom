@@ -55,6 +55,12 @@ if ipa:
     k = re.sub(r'(?<=.)[ˈˌ]', '.', ipa).replace('ˈ', '').replace('ˌ', '').count('.') + 1
     if k != n:
         errors.append(f'音標有 {k} 段，音節有 {n} 節，要對齊（音標用 . 分段）')
+    # 語音是照音標產生的：音標裡有 Google 英式語音不認得的符號，就沒辦法照音標念
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from build_audio import to_google  # noqa: E402
+    _, bad = to_google(ipa)
+    if bad:
+        errors.append(f'音標裡有語音不認得的符號：{" ".join(sorted(set(bad)))}（請用英式音標，例如 /ˈræb.ɪt/）')
 if errors:
     done('沒有寫入，請修正後重新送出：\n\n' + '\n'.join('- ' + e for e in errors), False)
 

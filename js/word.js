@@ -1,6 +1,6 @@
 // 一個字的九步驟探險
 import { DB, TYPES, rule, ruleForBox } from './data.js';
-import { play, stop, soundItem, wordItem, syllableItem, say, sfx, recordToggle, playRecording } from './audio.js';
+import { play, stop, soundItem, hasSound, wordItem, syllableItem, say, sfx, recordToggle, playRecording } from './audio.js';
 import { h, title, bubble, helpButton, toast, confetti, stamps, wordPicture, shuffle, mascot } from './ui.js';
 import * as S from './store.js';
 
@@ -266,7 +266,7 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
         if (b.silentBefore) parts.push(h('span', { class: 'silent' }, b.silentBefore));
         parts.push(h('span', { class: 'g' }, b.g));
         if (b.silentAfter) parts.push(h('span', { class: 'silent' }, b.silentAfter));
-        const seat = h('button', { class: 'seat' + (b.vowel ? ' v' : '') }, h('span', { class: 'letters' }, ...parts), h('span', { class: 'ph' }, '/' + b.ph + '/'));
+        const seat = h('button', { class: 'seat' + (b.vowel ? ' v' : '') + (hasSound(b.ph) ? '' : ' mute'), title: hasSound(b.ph) ? '' : '這個音還沒有錄音' }, h('span', { class: 'letters' }, ...parts), h('span', { class: 'ph' }, '/' + b.ph + '/'));
         seat.box = b; seat.si = si; order.push(seat); seats.append(seat);
         if (b.magic) seats.append(h('span', { class: 'magic-tag', title: 'magic e：不佔格' }, 'e'));
       });

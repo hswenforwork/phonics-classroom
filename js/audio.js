@@ -1,23 +1,28 @@
 // 聲音播放
-// 英文來源順序：本站上傳的音檔（audio/…）→ phonics-kids 的共用音檔 → 瀏覽器英式語音
+// 英文：只用本站的音檔，確保同一套發音
+//   單音 audio/sounds/（Oxford 真人錄音）；單字、音節、句子、故事都是依字庫英式音標產生的 Google 英式語音
+//   沒有音檔就不出聲（不改用瀏覽器語音，避免聽到第二種聲音）
 // 中文（口訣、指令）：本站 audio/rules、audio/say 音檔 → 瀏覽器中文語音（蒙蒙）
 import { DB } from './data.js';
 
-const PK = 'https://hswenforwork.github.io/phonics-kids/';
 let assets = new Set();
-let pkIndex = {};
-let pkSounds = {};
+let assetsLoaded = false;
 const settings = { rate: 1, sfx: true };
 export const setAudioSettings = (s) => Object.assign(settings, s);
 
 export async function initAudio() {
-  const get = (u) => fetch(u, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-  const [a, idx, sheet] = await Promise.all([get('assets.json'), get(PK + 'audio/index.json'), get(PK + 'data/sheet.json')]);
-  if (a && a.files) assets = new Set(a.files);
-  if (idx && idx.items) pkIndex = idx.items;
-  if (sheet && sheet.sounds) pkSounds = sheet.sounds;
+  const a = await fetch('assets.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  if (a && a.files) { assets = new Set(a.files); assetsLoaded = true; }
 }
 export const hasAsset = (p) => assets.has(p);
+export const audioListLoaded = () => assetsLoaded;
+// 檔名用的字：小寫、去掉撇號（it's → its）
+export const wordKey = (t) => String(t || '').toLowerCase().replace(/[^a-z]/g, '');
+// 這個字的整字與每個音節都有語音了嗎（沒有的字不出現在孩子的練習裡）
+export function wordReady(w) {
+  if (!assets.has('audio/words/' + w.word + '.mp3')) return false;
+  return w.sylText.length < 2 || w.sylText.every((_, i) => assets.has('audio/syllables/' + w.word + '-' + i + '.mp3'));
+}
 
 // iOS：在第一次觸碰時解鎖音訊
 const el = new Audio();
@@ -73,45 +78,52 @@ async function playOne(it, my) {
   if (it.pause) { await new Promise((r) => setTimeout(r, it.pause)); return; }
   if (it.onstart) it.onstart();
   for (const u of it.urls || []) { if (u && await playUrl(u, (it.rate || 1) * settings.rate, my)) return; if (my !== token) return; }
-  if (it.text) await tts(it.text, it.lang || 'en', it.ttsRate, my);
+  if (it.text && it.lang === 'zh') await tts(it.text, 'zh', it.ttsRate, my);
 }
 export async function play(items) {
   const my = ++token;
   if (window.speechSynthesis) speechSynthesis.cancel();
   el.pause();
-  for (const it of [].concat(items)) { if (my !== token) break; await playOne(it, my); }
+  for (const it of [].concat(items).flat()) { if (my !== token) break; await playOne(it, my); }
   return my === token;
 }
 export function stop() { token++; el.pause(); if (window.speechSynthesis) speechSynthesis.cancel(); }
 
 const own = (p) => (assets.has(p) ? p : null);
-const phFile = (ph) => Array.from(ph).map((c) => c.codePointAt(0).toString(16)).join('_');
 
-// 一個音（IPA）
+// 一個音（IPA）。沒有單獨錄音的組合音（例如 one 的 /wʌ/、boxes 的 /ɪz/）依序播放組成它的單音
+function soundFiles(ph) {
+  const s = DB.soundByIpa[ph];
+  const f = s && own('audio/sounds/' + s.sound_id + '.mp3');
+  if (f) return [f];
+  if (s) return []; // 本身是一個單音（例如 /əʊ/）但還沒錄音：不拆開念，避免念錯
+  for (let k = ph.length - 1; k > 0; k--) {
+    const a = soundFiles(ph.slice(0, k));
+    if (!a.length) continue;
+    const b = soundFiles(ph.slice(k));
+    if (b.length) return a.concat(b);
+  }
+  return [];
+}
+export const hasSound = (ph) => !!ph && soundFiles(ph).length > 0;
 export function soundItem(ph, extra) {
   if (!ph) return { pause: 250 };
-  const s = DB.soundByIpa[ph];
-  const urls = [];
-  if (s) urls.push(own('audio/sounds/' + s.sound_id + '.mp3'));
-  if (pkSounds[ph]) urls.push(PK + 'audio/' + pkSounds[ph] + '.mp3');
-  if (pkIndex['p/' + phFile(ph)]) urls.push(PK + 'audio/p/' + phFile(ph) + '.mp3');
-  return Object.assign({ urls, text: '', ttsRate: 0.6 }, extra);
+  const files = soundFiles(ph);
+  if (files.length > 1) return files.map((u, i) => Object.assign({ urls: [u] }, i === 0 ? extra : {}));
+  return Object.assign({ urls: files }, extra);
 }
 export function wordItem(w, extra) {
-  const word = typeof w === 'string' ? w : w.word;
-  const urls = [own('audio/words/' + word + '.mp3')];
-  if (pkIndex['w/' + word]) urls.push(PK + 'audio/w/' + word + '.mp3');
-  return Object.assign({ urls, text: word, ttsRate: 0.8 }, extra);
+  const word = wordKey(typeof w === 'string' ? w : w.word);
+  return Object.assign({ urls: [own('audio/words/' + word + '.mp3')] }, extra);
 }
 export function syllableItem(w, i, extra) {
-  const syl = w.sylText[i];
-  // 自己的音檔：先找自動產生的「單字-第幾節」，再找共用的音節檔
-  const urls = [own('audio/syllables/' + w.word + '-' + i + '.mp3'), own('audio/syllables/' + syl + '.mp3')];
-  if (pkIndex['s/' + w.word + '-' + i]) urls.push(PK + 'audio/s/' + w.word + '-' + i + '.mp3');
-  return Object.assign({ urls, text: syl, ttsRate: 0.7 }, extra);
+  return Object.assign({ urls: [own('audio/syllables/' + w.word + '-' + i + '.mp3')] }, extra);
 }
-export function sentenceItem(id, text) {
-  return { urls: [own('audio/sentences/' + id + '.mp3')], text, ttsRate: 0.8 };
+export function sentenceItem(id) {
+  return { urls: [own('audio/sentences/' + id + '.mp3')] };
+}
+export function storyItem(stage, page) {
+  return { urls: [own('audio/stories/' + stage + '-' + page + '.mp3')] };
 }
 // 中文（蒙蒙說話）
 export function say(text, file) {

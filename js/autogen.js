@@ -70,7 +70,7 @@ function usToUk(ipa) {
     .replace(/ɑ(?!ː)/g, 'ɒ').replace(/ɛ/g, 'e').replace(/ɹ/g, 'r');
 }
 function cleanIpa(ipa) {
-  return String(ipa || '').replace(/[\/\[\]()]/g, '').replace(/l̩/g, 'əl').replace(/n̩/g, 'ən').replace(/m̩/g, 'əm')
+  return String(ipa || '').replace(/\([^)]*\)/g, '').replace(/[\/\[\]]/g, '').replace(/l̩/g, 'əl').replace(/n̩/g, 'ən').replace(/m̩/g, 'əm')
     .replace(/ɹ/g, 'r').replace(/g/g, 'ɡ').replace(/ɐ/g, 'ə').replace(/ᵻ/g, 'ɪ').replace(/\s+/g, '').trim();
 }
 // 引擎內部用美式寫法，轉回英式寫法
@@ -97,7 +97,7 @@ function candidates(w) {
   return [...c];
 }
 async function knownSet(w) {
-  const known = new Set(DB.words.map((x) => x.word));
+  const known = new Set((DB.allWords.length ? DB.allWords : DB.words).map((x) => x.word));
   const list = candidates(w).filter((x) => !known.has(x));
   await Promise.all(list.map(async (x) => { const d = await dict(x); if (d.ok) known.add(x); }));
   return known;
