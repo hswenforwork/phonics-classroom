@@ -155,7 +155,7 @@ S6-10,lemon,6,地道迷宮,🍋,檸檬,lem/on,l-e-m/o=ə-n,/ˈlem.ən/,C/C,1,,,S
 S6-11,camel,6,地道迷宮,🐫,駱駝,cam/el,c-a-m/e=ə-l,/ˈkæm.əl/,C/C,1,,,Flyers,,Y
 S6-12,seven,6,地道迷宮,7️⃣,七,sev/en,s-e-v/e=ə-n,/ˈsev.ən/,C/C,1,,,Starters,,Y
 S6-13,sunflower,6,地道迷宮,🌻,向日葵,sun/flow/er,s-u-n/f-l-ow=aʊ/er=ə,/ˈsʌn.flaʊ.ə/,C/D/R,1,,,補充,,Y
-S6-14,football,8,星空營地,⚽,足球,foot/ball,f-oo=ʊ-t/b-a=ɔː-ll,/ˈfʊt.bɔːl/,T/W,1,,,Starters,,Y
+S6-14,football,8,星空營地,⚽,足球,foot/ball,f-oo=ʊ-t/b-a=ɔː-ll,/ˈfʊt.bɔːl/,T/W,1,a,,Starters,,Y
 S6-15,cupcake,6,地道迷宮,🧁,杯子蛋糕,cup/cake,c-u-p/c-a-k(e),/ˈkʌp.keɪk/,C/E,1,,,補充,,Y
 S6-16,rainbow,6,地道迷宮,🌈,彩虹,rain/bow,r-ai-n/b-ow,/ˈreɪn.bəʊ/,T/T,1,,,Movers,,Y
 S6-17,monster,6,地道迷宮,👾,怪獸,mon/ster,m-o-n/s-t-er=ə,/ˈmɒn.stə/,C/R,1,,,Starters,,Y
@@ -214,7 +214,7 @@ S8-12,castle,8,星空營地,🏰,城堡,cas/tle,c-a=ɑː-s/[t]le=əl,/ˈkɑː.s�
 S8-13,find,8,星空營地,🔍,找到,find,f-i=aɪ-n-d,/faɪnd/,W,1,,,Starters,,Y
 S8-14,child,8,星空營地,🧒,小孩,child,ch-i=aɪ-l-d,/tʃaɪld/,W,1,,,Starters,,Y
 S8-15,old,8,星空營地,👴,老的,old,o=əʊ-l-d,/əʊld/,W,1,,,Starters,,Y
-S8-16,ball,8,星空營地,⚽,球,ball,b-a=ɔː-ll,/bɔːl/,W,1,,,Starters,,Y
+S8-16,ball,8,星空營地,⚽,球,ball,b-a=ɔː-ll,/bɔːl/,W,1,a,,Starters,,Y
 S8-17,water,8,星空營地,💧,水,wa/ter,w-a=ɔː/t-er=ə,/ˈwɔː.tə/,W/R,1,a,,Starters,,Y
 S7-18,wanted,8,星空營地,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
 S8-18,mother,8,星空營地,👩,媽媽,moth/er,m-o=ʌ-th=ð/er=ə,/ˈmʌð.ə/,W/R,1,o,,Starters,,Y
