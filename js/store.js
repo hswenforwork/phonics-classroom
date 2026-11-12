@@ -57,6 +57,25 @@ export function buy(item) {
   const p = me(); if (!p || balance() < item.cost || p.items.includes(item.id)) return false;
   p.spent += item.cost; p.items.push(item.id); save(); return true;
 }
+// 地洞佈置：自由擺放。每個擺飾 { uid, id, x, y（地洞內的百分比位置）, s（大小 0 小、1 中、2 大）, f（左右翻轉）, z（前後） }
+// 舊版是 12 個固定格子（p.placed），第一次打開時轉成對應位置
+export function decor() {
+  const p = me(); if (!p) return [];
+  if (!p.decor) {
+    p.decor = [];
+    for (const [slot, id] of Object.entries(p.placed || {})) {
+      const i = +slot; const col = i % 6; const row = Math.floor(i / 6);
+      p.decor.push({ uid: 'd' + Date.now() + i, id, x: 6 + (col + 0.5) * (88 / 6), y: 18 + (row + 0.5) * 38, s: 1, f: false, z: i + 1 });
+    }
+    save();
+  }
+  return p.decor;
+}
+const topZ = () => Math.max(0, ...decor().map((d) => d.z || 0)) + 1;
+export function addDecor(id, x, y) { const d = { uid: 'd' + Date.now() + Math.random().toString(36).slice(2, 6), id, x, y, s: 1, f: false, z: topZ() }; decor().push(d); save(); return d; }
+export function updateDecor(uid, patch) { const d = decor().find((x) => x.uid === uid); if (d) { Object.assign(d, patch); save(); } return d; }
+export function bringFront(uid) { return updateDecor(uid, { z: topZ() }); }
+export function removeDecor(uid) { const p = me(); p.decor = decor().filter((x) => x.uid !== uid); save(); }
 export function place(itemId, slot) { const p = me(); for (const k in p.placed) if (p.placed[k] === itemId) delete p.placed[k]; if (slot != null) p.placed[slot] = itemId; save(); }
 
 export function mysteryDone() { const p = me(); return !!(p && p.mystery[today()]); }

@@ -357,34 +357,129 @@ export function bookScreen(tab = 'net', sub) {
   }
 }
 
-// ---------- 我的地洞：用腳印章佈置 ----------
+// ---------- 我的地洞：用腳印章佈置（自由拖曳） ----------
+const SHOP_CATS = [['furniture', '家具'], ['plant', '植物'], ['friend', '沙漠朋友'], ['food', '好吃的'], ['gear', '探險裝備'], ['sparkle', '閃亮亮']];
 const ITEMS = [
-  { id: 'rug', name: '小地毯', emoji: '🟫', cost: 5 }, { id: 'lamp', name: '小燈', emoji: '🪔', cost: 8 }, { id: 'plant', name: '仙人掌', emoji: '🌵', cost: 8 },
-  { id: 'bed', name: '軟軟的床', emoji: '🛏️', cost: 15 }, { id: 'books', name: '書架', emoji: '📚', cost: 15 }, { id: 'beetle', name: '甲蟲點心', emoji: '🪲', cost: 6 },
-  { id: 'flower', name: '沙漠花', emoji: '🌼', cost: 10 }, { id: 'radio', name: '收音機', emoji: '📻', cost: 20 }, { id: 'telescope', name: '望遠鏡', emoji: '🔭', cost: 25 },
-  { id: 'baby', name: '狐獴寶寶', emoji: '🐣', cost: 30 }, { id: 'star', name: '星星燈', emoji: '🌟', cost: 30 }, { id: 'trophy', name: '探險獎盃', emoji: '🏆', cost: 40 },
+  // 家具
+  { id: 'rug', cat: 'furniture', name: '小地毯', emoji: '🟫', cost: 5 }, { id: 'chair', cat: 'furniture', name: '小椅子', emoji: '🪑', cost: 8 }, { id: 'lamp', cat: 'furniture', name: '小燈', emoji: '🪔', cost: 8 },
+  { id: 'teddy', cat: 'furniture', name: '泰迪熊', emoji: '🧸', cost: 12 }, { id: 'bed', cat: 'furniture', name: '軟軟的床', emoji: '🛏️', cost: 15 }, { id: 'books', cat: 'furniture', name: '書架', emoji: '📚', cost: 15 },
+  { id: 'window', cat: 'furniture', name: '小窗戶', emoji: '🪟', cost: 15 }, { id: 'clock', cat: 'furniture', name: '時鐘', emoji: '🕰️', cost: 18 }, { id: 'radio', cat: 'furniture', name: '收音機', emoji: '📻', cost: 20 },
+  { id: 'sofa', cat: 'furniture', name: '沙發', emoji: '🛋️', cost: 20 },
+  // 植物
+  { id: 'grass', cat: 'plant', name: '小草', emoji: '🌱', cost: 5 }, { id: 'mushroom', cat: 'plant', name: '蘑菇', emoji: '🍄', cost: 6 }, { id: 'plant', cat: 'plant', name: '仙人掌', emoji: '🌵', cost: 8 },
+  { id: 'flower', cat: 'plant', name: '沙漠花', emoji: '🌼', cost: 10 }, { id: 'sunflower', cat: 'plant', name: '向日葵', emoji: '🌻', cost: 12 }, { id: 'palm', cat: 'plant', name: '棕櫚樹', emoji: '🌴', cost: 18 },
+  // 沙漠朋友
+  { id: 'snail', cat: 'friend', name: '蝸牛', emoji: '🐌', cost: 6 }, { id: 'butterfly', cat: 'friend', name: '蝴蝶', emoji: '🦋', cost: 8 }, { id: 'scorpion', cat: 'friend', name: '蠍子', emoji: '🦂', cost: 10 },
+  { id: 'lizard', cat: 'friend', name: '蜥蜴', emoji: '🦎', cost: 10 }, { id: 'baby', cat: 'friend', name: '狐獴寶寶', emoji: '🐣', cost: 30 }, { id: 'camel', cat: 'friend', name: '駱駝', emoji: '🐪', cost: 35 },
+  // 好吃的
+  { id: 'cookie', cat: 'food', name: '餅乾', emoji: '🍪', cost: 5 }, { id: 'beetle', cat: 'food', name: '甲蟲點心', emoji: '🪲', cost: 6 }, { id: 'melon', cat: 'food', name: '西瓜', emoji: '🍉', cost: 6 },
+  { id: 'honey', cat: 'food', name: '蜂蜜', emoji: '🍯', cost: 8 }, { id: 'cake', cat: 'food', name: '蛋糕', emoji: '🎂', cost: 20 },
+  // 探險裝備
+  { id: 'map', cat: 'gear', name: '地圖', emoji: '🗺️', cost: 10 }, { id: 'torch', cat: 'gear', name: '手電筒', emoji: '🔦', cost: 10 }, { id: 'compass', cat: 'gear', name: '指南針', emoji: '🧭', cost: 12 },
+  { id: 'backpack', cat: 'gear', name: '背包', emoji: '🎒', cost: 15 }, { id: 'telescope', cat: 'gear', name: '望遠鏡', emoji: '🔭', cost: 25 }, { id: 'tent', cat: 'gear', name: '帳篷', emoji: '⛺', cost: 40 },
+  // 閃亮亮
+  { id: 'balloon', cat: 'sparkle', name: '氣球', emoji: '🎈', cost: 8 }, { id: 'star', cat: 'sparkle', name: '星星燈', emoji: '🌟', cost: 30 }, { id: 'trophy', cat: 'sparkle', name: '探險獎盃', emoji: '🏆', cost: 40 },
+  { id: 'gem', cat: 'sparkle', name: '寶石', emoji: '💎', cost: 45 }, { id: 'rainbow', cat: 'sparkle', name: '彩虹', emoji: '🌈', cost: 50 }, { id: 'fireworks', cat: 'sparkle', name: '煙火', emoji: '🎆', cost: 60 },
 ];
+const SIZES = [0.7, 1, 1.45];
+let shopCat = 'furniture';
 export function burrowScreen() {
   const p = S.me(); if (!p) return go('profiles');
-  let holding = null;
+  let selected = null; // 被點選的擺飾 uid
   const room = h('div', { class: 'burrow-room' });
+  const trash = h('div', { class: 'trash', 'aria-label': '垃圾桶' }, '🗑️');
+  const tools = h('div', { class: 'decor-tools', hidden: true });
   const shop = h('div', { class: 'shop' });
-  const draw = () => {
-    room.replaceChildren(...Array.from({ length: 12 }, (_, i) => {
-      const it = ITEMS.find((x) => x.id === p.placed[i]);
-      return h('button', { class: 'slot-cell' + (it ? ' has' : ''), 'aria-label': it ? it.name : '空位', onClick: () => { if (holding) { S.place(holding, i); holding = null; sfx('stamp'); } else if (it) { S.place(it.id, null); } draw(); } }, it ? it.emoji : '');
-    }), h('div', { class: 'room-mascot' }, mascot(120)));
-    shop.replaceChildren(...ITEMS.map((it) => {
+  const catTabs = h('div', { class: 'shop-cats' });
+  const itemOf = (id) => ITEMS.find((x) => x.id === id);
+  const posIn = (el, cx, cy) => { const r = el.getBoundingClientRect(); return { x: ((cx - r.left) / r.width) * 100, y: ((cy - r.top) / r.height) * 100, inside: cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom }; };
+  const clamp = (v) => Math.max(3, Math.min(97, v));
+  const overTrash = (cx, cy) => { const r = trash.getBoundingClientRect(); return cx >= r.left - 10 && cx <= r.right + 10 && cy >= r.top - 10 && cy <= r.bottom + 10; };
+
+  function decorEl(d) {
+    const it = itemOf(d.id); if (!it) return null;
+    const el = h('div', { class: 'decor' + (selected === d.uid ? ' sel' : ''), role: 'button', 'aria-label': it.name,
+      style: { left: d.x + '%', top: d.y + '%', zIndex: d.z || 1, '--sz': SIZES[d.s ?? 1], '--fx': d.f ? -1 : 1 } }, it.emoji);
+    // 拖曳：手指或滑鼠都可以；移動很少就當作「點一下」
+    el.addEventListener('pointerdown', (e) => {
+      e.preventDefault(); el.setPointerCapture(e.pointerId);
+      const start = { x: e.clientX, y: e.clientY }; let moved = false;
+      const move = (ev) => {
+        if (Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > 6) moved = true;
+        if (!moved) return;
+        const q = posIn(room, ev.clientX, ev.clientY);
+        el.style.left = clamp(q.x) + '%'; el.style.top = clamp(q.y) + '%';
+        trash.classList.toggle('hot', overTrash(ev.clientX, ev.clientY)); tools.hidden = true;
+      };
+      const up = (ev) => {
+        el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+        trash.classList.remove('hot');
+        if (!moved) { selected = selected === d.uid ? null : d.uid; draw(); return; }
+        if (overTrash(ev.clientX, ev.clientY)) { S.removeDecor(d.uid); selected = null; sfx('tap'); draw(); return; }
+        const q = posIn(room, ev.clientX, ev.clientY);
+        S.updateDecor(d.uid, { x: clamp(q.x), y: clamp(q.y) }); S.bringFront(d.uid); selected = d.uid; draw();
+      };
+      el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    });
+    return el;
+  }
+  function drawTools() {
+    const d = S.decor().find((x) => x.uid === selected);
+    if (!d) { tools.hidden = true; return; }
+    const it = itemOf(d.id);
+    tools.hidden = false;
+    tools.style.left = Math.min(Math.max(d.x, 18), 82) + '%';
+    tools.style.top = (d.y > 40 ? d.y - 14 : d.y + 14) + '%';
+    const btn = (label, aria, fn, dis) => h('button', { class: 'tool-btn', 'aria-label': aria, disabled: !!dis, onClick: (e) => { e.stopPropagation(); fn(); sfx('tap'); draw(); } }, label);
+    tools.replaceChildren(h('b', {}, it ? it.name : ''),
+      btn('－', '縮小', () => S.updateDecor(d.uid, { s: Math.max(0, (d.s ?? 1) - 1) }), (d.s ?? 1) <= 0),
+      btn('＋', '放大', () => S.updateDecor(d.uid, { s: Math.min(2, (d.s ?? 1) + 1) }), (d.s ?? 1) >= 2),
+      btn('↔', '左右翻轉', () => S.updateDecor(d.uid, { f: !d.f })),
+      btn('⬆', '移到最前面', () => S.bringFront(d.uid)),
+      btn('🗑️', '刪除', () => { S.removeDecor(d.uid); selected = null; }),
+      btn('✓', '完成', () => { selected = null; }));
+  }
+  // 從小舖拖進地洞（已擁有的物件）；只點一下就放在地洞中間
+  function dragFromShop(it, e) {
+    const ghost = h('div', { class: 'decor ghost', style: { '--sz': 1, '--fx': 1 } }, it.emoji);
+    const start = { x: e.clientX, y: e.clientY }; let moved = false;
+    const place = (cx, cy) => { ghost.style.left = cx + 'px'; ghost.style.top = cy + 'px'; };
+    const target = e.currentTarget; target.setPointerCapture(e.pointerId);
+    const move = (ev) => {
+      if (!moved && Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > 6) { moved = true; document.body.append(ghost); }
+      if (moved) place(ev.clientX, ev.clientY);
+    };
+    const up = (ev) => {
+      target.removeEventListener('pointermove', move); target.removeEventListener('pointerup', up); target.removeEventListener('pointercancel', up);
+      ghost.remove();
+      if (!moved) { const d = S.addDecor(it.id, 50, 55); selected = d.uid; sfx('stamp'); draw(); return; }
+      const q = posIn(room, ev.clientX, ev.clientY);
+      if (q.inside) { const d = S.addDecor(it.id, clamp(q.x), clamp(q.y)); selected = d.uid; sfx('stamp'); draw(); }
+    };
+    target.addEventListener('pointermove', move); target.addEventListener('pointerup', up); target.addEventListener('pointercancel', up);
+  }
+  function draw() {
+    const list = S.decor().slice().sort((a, b) => (a.z || 0) - (b.z || 0));
+    room.replaceChildren(h('div', { class: 'room-mascot' }, mascot(110)), ...list.map(decorEl).filter(Boolean), trash, tools);
+    drawTools();
+    catTabs.replaceChildren(...SHOP_CATS.map(([k, n]) => h('button', { class: 'shop-cat' + (k === shopCat ? ' on' : ''), onClick: () => { shopCat = k; draw(); } }, n)));
+    shop.replaceChildren(...ITEMS.filter((it) => it.cat === shopCat).sort((a, b) => a.cost - b.cost).map((it) => {
       const owned = p.items.includes(it.id);
-      return h('button', { class: 'shop-item' + (owned ? ' owned' : '') + (holding === it.id ? ' holding' : ''), onClick: () => {
-        if (!owned) { if (S.buy(it)) { sfx('win'); toast(`買到${it.name}了！點地洞裡的位置放上去`); holding = it.id; } else { sfx('bad'); toast(`還差 ${it.cost - S.balance()} 個腳印章`); } }
-        else holding = holding === it.id ? null : it.id;
+      const el = h('button', { class: 'shop-item' + (owned ? ' owned' : ''), 'aria-label': it.name },
+        h('span', { class: 'big-emoji' }, it.emoji), h('b', {}, it.name), owned ? h('small', {}, '拖進地洞') : h('small', {}, paw('#E2483D', 14), ' ', it.cost));
+      if (owned) el.addEventListener('pointerdown', (e) => { e.preventDefault(); dragFromShop(it, e); });
+      else el.addEventListener('click', () => {
+        if (S.buy(it)) { sfx('win'); toast(`買到${it.name}了！把它拖進地洞吧`); } else { sfx('bad'); toast(`還差 ${it.cost - S.balance()} 個腳印章`); }
         draw(); document.querySelector('.stamp-count').replaceWith(stampCount());
-      } }, h('span', { class: 'big-emoji' }, it.emoji), h('b', {}, it.name), owned ? h('small', {}, holding === it.id ? '點地洞放上去' : '已擁有') : h('small', {}, paw('#E2483D', 14), ' ', it.cost));
+      });
+      return el;
     }));
-  };
+  }
+  room.addEventListener('pointerdown', (e) => { if (e.target === room && selected) { selected = null; draw(); } });
   app().replaceChildren(h('div', { class: 'screen burrow' }, topBar(() => go('home'), h('b', {}, '我的地洞'), stampCount()), dune(),
-    h('main', { class: 'burrow-main' }, h('section', {}, title('用腳印章佈置你的地洞！'), room), h('aside', {}, h('h2', {}, '沙漠小舖'), shop))));
+    h('main', { class: 'burrow-main' },
+      h('section', {}, title('用腳印章佈置你的地洞！'), room, h('p', { class: 'hint' }, '把買到的東西拖進地洞；點一下可以放大、縮小、翻面、移到最前面；拖到垃圾桶就收起來。')),
+      h('aside', {}, h('h2', {}, '沙漠小舖'), catTabs, shop))));
   draw();
 }
 
