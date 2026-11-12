@@ -1,6 +1,7 @@
 // 各個畫面
 import { DB, PLACES, NODES, DEFAULT_PH, wordsOf, rule } from './data.js';
 import { play, stop, wordItem, sentenceItem, say, sfx, setAudioSettings } from './audio.js';
+import { autogen } from './autogen.js';
 import { h, title, bubble, mascot, toast, confetti, stamps, paw, wordPicture, shuffle, ruleDialog } from './ui.js';
 import { playWord, spellWord } from './word.js';
 import * as S from './store.js';
@@ -261,16 +262,72 @@ export function parentScreen(unlocked) {
   const stepNames = { 1: '聽音', 3: '例外字', 4: '字尾', 5: '母音', 6: '子音', 7: '切開', 8: '類型' };
   const missRows = p ? Object.entries(p.stepMiss).sort((a, b) => b[1] - a[1]) : [];
 
-  const f = { word: h('input', { placeholder: 'rabbit' }), stage: h('select', {}, ...PLACES.slice(1).map((pl) => h('option', { value: pl.no }, pl.no + ' ' + pl.name))), emoji: h('input', { placeholder: '🐰' }), zh: h('input', { placeholder: '兔子' }),
+  // ---------- 新增或修改單字：家長只輸入英文單字，其他欄位自動產生，確認後送到 GitHub ----------
+  const LABELS = { stage: '地點', emoji: '圖示 emoji', zh: '中文意思', syllables: '音節', sounds: '音格', ipa: '英式音標', types: '音節類型', stress: '重音在第幾節', tricky: '調皮字母', suffix: '字首字尾' };
+  const f = { word: h('input', { placeholder: '輸入一個英文單字，例如 rabbit', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false', onKeydown: (e) => { if (e.key === 'Enter') generate(false); } }),
+    stage: h('select', {}, ...PLACES.slice(1).map((pl) => h('option', { value: pl.no }, pl.no + ' ' + pl.name))), emoji: h('input', { placeholder: '空白＝文字卡' }), zh: h('input', { placeholder: '兔子' }),
     syllables: h('input', { placeholder: 'rab/bit' }), sounds: h('input', { placeholder: 'r-a-b/b-i-t' }), ipa: h('input', { placeholder: '/ˈræb.ɪt/' }), types: h('input', { placeholder: 'C/C' }), stress: h('input', { placeholder: '1', inputmode: 'numeric' }),
     tricky: h('input', {}), suffix: h('input', { placeholder: 'swim+ing|雙寫' }) };
-  const fill = (w) => { if (!w) return; Object.assign(f.word, { value: w.word }); f.stage.value = w.stage; f.emoji.value = w.emoji; f.zh.value = w.zh; f.syllables.value = w.sylText.join('/'); f.ipa.value = w.ipa; f.types.value = w.types.join('/'); f.stress.value = w.stress; f.tricky.value = w.tricky; f.suffix.value = w.suffix;
-    f.sounds.value = w.syls.map((s) => s.map((b) => (b.silentBefore ? `[${b.silentBefore}]` : '') + b.g + (b.ph !== DEFAULT_PH[b.g] ? '=' + b.ph : '') + (b.magic ? '(e)' : '') + (b.silentAfter ? `[${b.silentAfter}]` : '')).join('-')).join('/'); };
-  const pickWord = h('select', { onChange: (e) => fill(DB.words.find((w) => w.id === e.target.value)) }, h('option', { value: '' }, '（新增一個字，或選一個字來修改）'), ...DB.words.map((w) => h('option', { value: w.id }, `${w.stage}｜${w.word}`)));
+  const why = Object.fromEntries(Object.keys(LABELS).map((k) => [k, h('small', { class: 'why', hidden: true })]));
+  const fieldRow = (k) => h('label', { class: 'field', 'data-k': k }, LABELS[k], f[k], why[k]);
+  const rows = Object.fromEntries(Object.keys(LABELS).map((k) => [k, fieldRow(k)]));
+  const status = h('p', { class: 'gen-status', hidden: true });
+  const regenBtn = h('button', { class: 'btn small', hidden: true, onClick: () => generate(true) }, '重新自動產生');
+  const form = h('div', { class: 'gen-form', hidden: true },
+    h('div', { class: 'form-grid' }, ...Object.keys(LABELS).map((k) => rows[k])),
+    h('p', { class: 'muted' }, '黃色欄位是工具沒把握的地方，請看下方說明再確認。送出後，網站會自動用英式語音產生這個字和每個音節的音檔。'),
+    h('div', { class: 'row' }, h('button', { class: 'btn', onClick: () => preview() }, '🔊 試聽'), h('button', { class: 'btn primary', onClick: () => submit() }, '送出到 GitHub')));
+  // 欄位一改就取消黃色提示（家長已確認）
+  Object.keys(LABELS).forEach((k) => f[k].addEventListener('input', () => mark(k, '')));
+  f.stage.addEventListener('change', () => mark('stage', ''));
+  function mark(k, msg, info) {
+    rows[k].classList.toggle('warn', !!msg);
+    why[k].hidden = !(msg || info); why[k].textContent = msg || info || '';
+  }
+  const soundsOf = (w) => w.syls.map((s) => s.map((b) => (b.silentBefore ? `[${b.silentBefore}]` : '') + b.g + (b.ph !== DEFAULT_PH[b.g] ? '=' + b.ph : '') + (b.magic ? '(e)' : '') + (b.silentAfter ? `[${b.silentAfter}]` : '')).join('-')).join('/');
+  const fill = (w) => {
+    f.word.value = w.word; f.stage.value = w.stage; f.emoji.value = w.emoji; f.zh.value = w.zh; f.syllables.value = w.sylText.join('/'); f.ipa.value = w.ipa;
+    f.types.value = w.types.join('/'); f.stress.value = w.stress; f.tricky.value = w.tricky; f.suffix.value = w.suffix; f.sounds.value = soundsOf(w);
+    Object.keys(LABELS).forEach((k) => mark(k, ''));
+  };
+  const showStatus = (t) => { status.hidden = !t; status.textContent = t || ''; };
+  let busy = false;
+  async function generate(force) {
+    const word = f.word.value.trim().toLowerCase();
+    if (!/^[a-z]+$/.test(word)) return toast('請輸入一個英文單字（只用字母）');
+    const old = DB.words.find((w) => w.word === word);
+    regenBtn.hidden = !old;
+    if (old && !force) {
+      fill(old); form.hidden = false;
+      const pl = PLACES.find((x) => x && +x.no === +old.stage);
+      showStatus(`這個字已經在第 ${old.stage} 站（${pl ? pl.name : ''}），下面是目前的內容，可以直接修改後送出；想讓工具重新判斷，請按「重新自動產生」。`);
+      return;
+    }
+    if (busy) return; busy = true;
+    showStatus('正在查字典、分析自然發音規則…'); form.hidden = true;
+    try {
+      const g = await autogen(word);
+      Object.entries(g.fields).forEach(([k, v]) => { f[k].value = v; });
+      Object.keys(LABELS).forEach((k) => mark(k, g.warn[k], g.note[k]));
+      form.hidden = false;
+      const n = Object.keys(g.warn).length;
+      showStatus((old ? `這個字已經在第 ${old.stage} 站，以下是重新自動產生的內容（送出會覆蓋舊的）。` : '已自動產生。') + (n ? `有 ${n} 個欄位請特別確認（黃色）。` : '請確認後送出。'));
+    } catch (e) { showStatus('自動產生失敗：' + (e.message || e)); }
+    finally { busy = false; }
+  }
+  // 試聽：用瀏覽器的英式語音念整個字，再一節一節念
+  function preview() {
+    const word = f.word.value.trim(); if (!word) return;
+    const syls = f.syllables.value.split('/').map((s) => s.trim()).filter(Boolean);
+    const old = DB.words.find((w) => w.word === word);
+    const items = [old ? wordItem(old) : { urls: [], text: word, ttsRate: 0.8 }];
+    if (syls.length > 1) syls.forEach((s) => items.push({ pause: 400 }, { urls: [], text: s, ttsRate: 0.7 }));
+    play(items);
+  }
   const submit = () => {
     const data = Object.fromEntries(Object.entries(f).map(([k, el]) => [k, el.value.trim()]));
     if (!data.word) return toast('請填英文單字');
-    const body = `pc-action: word\n\n\`\`\`json\n${JSON.stringify(data, null, 1)}\n\`\`\`\n\n送出後，自動流程會把這個字寫進 data/words.csv（同一個字會覆蓋舊的）。`;
+    const body = `pc-action: word\n\n\`\`\`json\n${JSON.stringify(data, null, 1)}\n\`\`\`\n\n送出後，自動流程會把這個字寫進 data/words.csv（同一個字會覆蓋舊的），再自動產生英式語音。`;
     window.open(`https://github.com/${REPO}/issues/new?title=${encodeURIComponent('單字：' + data.word)}&body=${encodeURIComponent(body)}`, '_blank');
   };
 
@@ -283,9 +340,9 @@ export function parentScreen(unlocked) {
         h('h3', {}, '最常卡住的步驟'), missRows.length ? h('table', {}, h('tr', {}, h('th', {}, '步驟'), h('th', {}, '錯誤次數')), ...missRows.map(([k, n]) => h('tr', {}, h('td', {}, stepNames[k] || k), h('td', {}, n)))) : h('p', { class: 'muted' }, '還沒有紀錄'),
         h('h3', {}, '還沒拿滿 3 個章的字'), weak.length ? h('div', { class: 'chips' }, ...weak.map(([w, s]) => h('span', { class: 'chip' }, w.word, ' ', s.best, '★'))) : h('p', { class: 'muted' }, '沒有，太棒了！')),
       h('section', { class: 'panel' }, h('h2', {}, '新增或修改單字（送到 GitHub）'),
-        h('p', { class: 'muted' }, '填好後按送出，會開啟 GitHub 的申請單頁面，按 Submit 即可；約 1～3 分鐘後網站更新。欄位寫法見 data/README.md。'),
-        pickWord, h('div', { class: 'form-grid' }, ...Object.entries({ word: '英文單字', stage: '地點', emoji: '圖示 emoji', zh: '中文意思', syllables: '音節', sounds: '音格', ipa: '英式音標', types: '音節類型', stress: '重音在第幾節', tricky: '調皮字母', suffix: '字尾' }).map(([k, n]) => h('label', {}, n, f[k]))),
-        h('button', { class: 'btn primary', onClick: submit }, '送出到 GitHub')),
+        h('p', { class: 'muted' }, '只要輸入一個英文單字，按「自動產生」，工具會查字典並依自然發音規則填好其他欄位；確認後按送出，會開啟 GitHub 的申請單頁面，按 Submit 即可，約 1～3 分鐘後網站更新。欄位寫法見 data/README.md。'),
+        h('div', { class: 'row gen-row' }, f.word, h('button', { class: 'btn primary', onClick: () => generate(false) }, '自動產生'), regenBtn),
+        status, form),
       h('section', { class: 'panel' }, h('h2', {}, '換圖片、換音檔'), h('p', {}, '把同檔名的檔案上傳到 GitHub 對應的資料夾就會自動替換，例如 images/words/rabbit.png、audio/words/rabbit.mp3、audio/rules/L6-13.mp3（口訣語音）。'),
         h('a', { class: 'btn', href: `https://github.com/${REPO}/tree/main/data`, target: '_blank' }, '打開 GitHub 資料夾')),
       h('section', { class: 'panel' }, h('h2', {}, '探險隊員'), ...S.profiles().map((x) => h('div', { class: 'row' }, h('span', { class: 'avatar sm', style: { background: x.color } }, x.name.slice(0, 1)), x.name,

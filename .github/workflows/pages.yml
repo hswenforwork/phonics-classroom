@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
   workflow_run:
-    workflows: [單字申請單]
+    workflows: [單字申請單, 產生語音]
     types: [completed]
   workflow_dispatch:
 

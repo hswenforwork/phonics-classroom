@@ -105,7 +105,8 @@ export function wordItem(w, extra) {
 }
 export function syllableItem(w, i, extra) {
   const syl = w.sylText[i];
-  const urls = [own('audio/syllables/' + syl + '.mp3')];
+  // 自己的音檔：先找自動產生的「單字-第幾節」，再找共用的音節檔
+  const urls = [own('audio/syllables/' + w.word + '-' + i + '.mp3'), own('audio/syllables/' + syl + '.mp3')];
   if (pkIndex['s/' + w.word + '-' + i]) urls.push(PK + 'audio/s/' + w.word + '-' + i + '.mp3');
   return Object.assign({ urls, text: syl, ttsRate: 0.7 }, extra);
 }
