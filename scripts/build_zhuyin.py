@@ -97,6 +97,9 @@ def load_tsi(readings):
     return tsi
 
 
+# 注音字型裡沒有的字與讀音
+EXTRA_READINGS = {'獴': 'ㄇㄥˊ'}
+
 # 一、不：變調字，沒有詞語規則時用本調（字型預設）
 SAFE_DEFAULT = set('一不')
 
@@ -183,13 +186,20 @@ def main():
 
     # 破音字資料（只放網站用到的字）
     poyin = {c: {'r': readings[c], 'p': {str(j): v for j, v in pats.get(c, {}).items() if v}} for c in used}
+    # 注音字型裡沒有的字（例如「獴」）：網站另外在字旁邊畫注音
+    from fontTools.ttLib import TTFont
+    cmap = TTFont(os.path.join(SRC, 'BpmfHuninn-Regular.ttf')).getBestCmap()
+    missing = {c: EXTRA_READINGS.get(c, '') for c in chars if ord(c) not in cmap}
+    for c, r in missing.items():
+        if not r:
+            print(f'注意：字型沒有「{c}」，也不知道讀音，請加到 scripts/build_zhuyin.py 的 EXTRA_READINGS', file=sys.stderr)
     tmap = {}
     for t in texts:
         a = annotate(t, readings, pats, fx, tsi)
         if a != t:
             tmap[t] = a
     with open(os.path.join(ROOT, 'data', 'zhuyin.json'), 'w', encoding='utf-8') as f:
-        json.dump({'map': tmap, 'poyin': poyin, 'fix': fx}, f, ensure_ascii=False, separators=(',', ':'))
+        json.dump({'map': tmap, 'poyin': poyin, 'fix': fx, 'extra': {c: r for c, r in missing.items() if r}}, f, ensure_ascii=False, separators=(',', ':'))
 
     # 判斷不了的破音字：同一個字、同一段上下文只列一次
     check, seen = [], set()
@@ -220,6 +230,15 @@ def main():
     uni = ['U+E01E0-E01E5', 'U+3100-312F', 'U+02C7', 'U+02CA', 'U+02CB', 'U+02D9', 'U+0020-007E']
     subset.main([os.path.join(SRC, 'BpmfHuninn-Regular.ttf'), '--text=' + text, '--unicodes=' + ','.join(uni),
                  '--layout-features=*', '--flavor=woff2', '--output-file=' + os.path.join(ROOT, 'fonts', 'BpmfHuninn-subset.woff2')])
+    # 字型網址加上版本號，避免瀏覽器沿用舊的字型（舊字型缺字就沒有注音）
+    import hashlib
+    out = os.path.join(ROOT, 'fonts', 'BpmfHuninn-subset.woff2')
+    ver = hashlib.md5(open(out, 'rb').read()).hexdigest()[:10]
+    css = os.path.join(ROOT, 'css', 'app.css')
+    src = open(css, encoding='utf-8').read()
+    src2 = re.sub(r"url\('\.\./fonts/BpmfHuninn-subset\.woff2(\?v=[0-9a-f]*)?'\)", f"url('../fonts/BpmfHuninn-subset.woff2?v={ver}')", src)
+    if src2 != src:
+        open(css, 'w', encoding='utf-8').write(src2)
     print(f'注音：{len(texts)} 段文字、{len(chars)} 個國字、{len(used)} 個破音字、待確認 {len(check)} 處')
     return 0
 
