@@ -1,7 +1,7 @@
 // 一個字的九步驟探險
 import { DB, TYPES, rule, ruleForBox } from './data.js';
 import { play, stop, soundItem, hasSound, wordItem, syllableItem, say, sfx, recordToggle, playRecording } from './audio.js';
-import { h, title, bubble, helpButton, toast, confetti, stamps, wordPicture, shuffle, mascot } from './ui.js';
+import { h, title, bubble, helpButton, toast, confetti, stamps, wordPicture, shuffle, mascot, otherSpellings } from './ui.js';
 import * as S from './store.js';
 
 const STEPS = [
@@ -147,10 +147,10 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
   function s4(step) {
     const s = w.suf;
     const soundQ = s.rule.startsWith('/');
-    const KEY = { 雙寫: 'suf:雙寫', 去e: 'suf:去e', y變i: 'suf:y變i', f變ves: 'suf:f變ves', 不規則: 'suf:不規則', '/s/': 'suf:/s/', '/z/': 'suf:/s/', '/ɪz/': 'suf:/s/', '/t/': 'suf:/t/', '/d/': 'suf:/t/', '/ɪd/': 'suf:/t/' };
-    const LABEL = { 雙寫: '子音雙寫', 去e: '去掉 e', y變i: 'y 變 i', f變ves: 'f 變 ves', 不規則: '整個變身', 直接加: '直接加上去' };
+    const KEY = { ie變y: 'suf:ie變y', 雙寫: 'suf:雙寫', 去e: 'suf:去e', y變i: 'suf:y變i', f變ves: 'suf:f變ves', 不規則: 'suf:不規則', '/s/': 'suf:/s/', '/z/': 'suf:/s/', '/ɪz/': 'suf:/s/', '/t/': 'suf:/t/', '/d/': 'suf:/t/', '/ɪd/': 'suf:/t/' };
+    const LABEL = { ie變y: 'ie 變 y', 雙寫: '子音雙寫', 去e: '去掉 e', y變i: 'y 變 i', f變ves: 'f 變 ves', 不規則: '整個變身', 直接加: '直接加上去' };
     const ruleKey = KEY[s.rule] || (s.add === 'ing' ? 'suf:ing' : s.root === 'un' ? 'suf:un' : 'suf:es');
-    const pool = soundQ ? (['/t/', '/d/', '/ɪd/'].includes(s.rule) ? ['/t/', '/d/', '/ɪd/'] : ['/s/', '/z/', '/ɪz/']) : ['直接加', '雙寫', '去e', 'y變i', '不規則', 'f變ves'];
+    const pool = soundQ ? (['/t/', '/d/', '/ɪd/'].includes(s.rule) ? ['/t/', '/d/', '/ɪd/'] : ['/s/', '/z/', '/ɪz/']) : ['直接加', '雙寫', '去e', 'y變i', '不規則', 'f變ves', 'ie變y'];
     const correct = soundQ ? s.rule : (s.rule in LABEL ? s.rule : '直接加');
     const opts = shuffle([correct, shuffle(pool.filter((x) => x !== correct))[0]]);
     const f = frame(step, () => [rule(ruleKey)],
@@ -171,7 +171,12 @@ export function playWord(root, w, { quick = false, onDone, onExit }) {
     const targets = row.tiles.filter((t) => t.box.vowel);
     const rules = () => {
       const out = [];
-      w.syls.forEach((syl) => syl.forEach((b) => { if (b.vowel) out.push(syl.some((x) => x.magic) && b.g.length === 1 ? rule('g:' + b.g + '-e') : ruleForBox(b)); }));
+      w.syls.forEach((syl) => syl.forEach((b, k) => {
+        if (!b.vowel) return;
+        out.push(syl.some((x) => x.magic) && b.g.length === 1 ? rule('g:' + b.g + '-e') : ruleForBox(b));
+        const nx = syl[k + 1]; // 黏黏音：短母音後面接 ng 或 nk
+        if (nx && b.g.length === 1 && (nx.g === 'ng' || nx.ph === 'ŋ')) out.push(rule(syl[k + 2] && syl[k + 2].g === 'k' ? 'weld:nk' : 'weld:ng'));
+      }));
       return [...new Set(out.filter(Boolean))];
     };
     const f = frame(step, rules, row, h('p', { class: 'hint' }, 'a e i o u 和它們的好朋友（ai、ee、ar…）都是母音。'));
@@ -334,7 +339,12 @@ export function spellWord(root, w, { onDone, onExit }) {
   const slots = boxes.map((b) => h('div', { class: 'slot' + (b.vowel ? ' v' : '') }));
   const cards = pool.map((g) => h('button', { class: 'tile', onClick: (e) => {
     const b = boxes[k];
-    if (g !== b.g) { errors++; sfx('bad'); e.currentTarget.classList.add('shake'); setTimeout(() => e.currentTarget.classList.remove('shake'), 400); play(soundItem(b.ph)); return; }
+    if (g !== b.g) {
+      const btn = e.currentTarget;
+      errors++; sfx('bad'); btn.classList.add('shake'); setTimeout(() => btn.classList.remove('shake'), 400); play(soundItem(b.ph));
+      if (b.vowel) { const o = otherSpellings(b); if (o.length) toast(`這個母音也可能拼成 ${o.slice(0, 4).join('、')}，答完可以去母音沙谷看看！`, 2600); }
+      return;
+    }
     slots[k].textContent = (b.silentBefore || '') + g + (b.silentAfter || '') + (b.magic ? 'e' : ''); slots[k].classList.add('filled');
     e.currentTarget.disabled = true; play(soundItem(b.ph)); k++;
     if (k === boxes.length) { sfx('win'); confetti(); setTimeout(() => { play(wordItem(w)); done(); }, 500); }
@@ -370,6 +380,7 @@ export function typeExplain(w, i, onNext) {
     case 'R': text = `${v.g} 裡的 r 管住前面的母音 → 念 /${ph}/，英式 r 不出聲`; break;
     case 'D': text = `${v.g} 念的時候嘴巴會滑動 → 念 /${ph}/`; break;
     case 'L': { const c = syl[vi - 1]; if (c) key.add(vi - 1); text = `子音 ${c ? c.g : ''} 抓著 le 一起走 → 念 /${c ? c.ph : ''}əl/`; break; }
+    case 'S': text = `${v.g} 是尾巴零件，整塊一起念 /${ph}/`; break;
     case 'W': { const tr = (w.tricky || (v && v.g) || '').trim(); text = `${tr} 不照規則，在這裡念 /${ph}/，要特別記住 ❤`; break; }
     default: text = `念 /${ph}/`;
   }

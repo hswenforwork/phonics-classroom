@@ -37,7 +37,7 @@ def kid_texts():
     """孩子會看到的中文（每一筆是一段完整文字，當作判斷破音字的上下文）。"""
     out = []
     cols = {'words.csv': ['meaning_zh', 'place'], 'sentences.csv': ['meaning_zh', 'place'], 'stories.csv': ['title_zh', 'meaning_zh', 'place'],
-            'rules.csv': ['character', 'title', 'mnemonic', 'action', 'parent_note'], 'pairs.csv': [], 'sounds.csv': []}
+            'rules.csv': ['character', 'title', 'mnemonic', 'action', 'parent_note', 'contrast', 'reliability'], 'vowels.csv': ['name_zh', 'mnemonic', 'note'], 'pairs.csv': [], 'sounds.csv': []}
     for name, cs in cols.items():
         for r in read_csv(name):
             out += [r.get(c, '') for c in cs if CJK.search(r.get(c, '') or '')]

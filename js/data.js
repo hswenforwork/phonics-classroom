@@ -20,6 +20,7 @@ export const TYPES = {
   D: { name: '雙母音', en: 'Diphthong', color: '#E0A33A', rule: 'type:D' },
   L: { name: '子音＋le', en: 'C-le', color: '#B5643C', rule: 'type:L' },
   W: { name: '調皮音節', en: 'Tricky', color: '#5B5A8C', rule: 'tricky' },
+  S: { name: '尾巴零件', en: 'Suffix chunk', color: '#C2577A', rule: 'type:S' },
 };
 
 // 每種拼法的預設讀音（sounds 欄沒寫 =音 時使用）
@@ -29,9 +30,9 @@ export const DEFAULT_PH = {
   sh: 'ʃ', ch: 'tʃ', th: 'θ', ng: 'ŋ', ph: 'f', ck: 'k', ll: 'l', ss: 's', zz: 'z', ff: 'f', tch: 'tʃ', dge: 'dʒ', wh: 'w',
   ai: 'eɪ', ay: 'eɪ', ee: 'iː', ea: 'iː', igh: 'aɪ', ie: 'aɪ', oa: 'əʊ', ow: 'əʊ', oo: 'uː', ou: 'aʊ', oi: 'ɔɪ', oy: 'ɔɪ', oe: 'əʊ', ue: 'uː', ew: 'uː',
   bb: 'b', dd: 'd', gg: 'ɡ', mm: 'm', nn: 'n', pp: 'p', rr: 'r', tt: 't',
-  ar: 'ɑː', or: 'ɔː', ir: 'ɜː', ur: 'ɜː', er: 'ɜː', air: 'eə', ear: 'ɪə', le: 'əl', ed: 'd', es: 'ɪz', all: 'ɔːl', eo: 'iː', eye: 'aɪ',
+  ar: 'ɑː', or: 'ɔː', ir: 'ɜː', ur: 'ɜː', er: 'ɜː', air: 'eə', ear: 'ɪə', le: 'əl', ed: 'd', es: 'ɪz', tion: 'ʃən', sion: 'ʒən', ture: 'tʃə', all: 'ɔːl', eo: 'iː', eye: 'aɪ',
 };
-const VOWEL_PH = /^(æ|e|ɪ|ɒ|ʌ|eɪ|iː|aɪ|əʊ|uː|ʊ|juː|ɑː|ɔː|ɜː|eə|ɪə|aʊ|ɔɪ|ə|i|əl|ɪz|wʌ|ɔːl)$/;
+const VOWEL_PH = /^(æ|e|ɪ|ɒ|ʌ|eɪ|iː|aɪ|əʊ|uː|ʊ|juː|ɑː|ɔː|ɜː|eə|ɪə|aʊ|ɔɪ|ə|i|əl|ɪz|wʌ|ɔːl|ʃən|tʃən|ʒən|tʃə)$/;
 
 export function parseCSV(text) {
   text = text.replace(/^﻿/, '');
@@ -180,7 +181,7 @@ export function wordTags(w) {
     if (b.g === 'y' && b.vowel) t.add('y');
     if ((b.g === 'c' && b.ph === 's') || (b.g === 'g' && b.ph === 'dʒ')) t.add('soft');
   }
-  for (const ty of w.types) t.add({ T: 'team', R: 'bossy', D: 'slide', L: 'tail', W: 'tricky', O: 'door', C: 'door', E: 'magic' }[ty]);
+  for (const ty of w.types) t.add({ T: 'team', R: 'bossy', D: 'slide', L: 'tail', W: 'tricky', O: 'door', C: 'door', E: 'magic', S: 'tail' }[ty]);
   for (const s of w.syls) {
     for (let i = 0; i < s.length - 1; i++) if (!s[i].vowel && !s[i + 1].vowel && s[i].g.length === 1 && s[i + 1].g.length === 1 && s[i].g !== s[i + 1].g) t.add('blend');
   }
@@ -214,11 +215,12 @@ async function load(name) {
   return parseCSV(await r.text());
 }
 
-export const DB = { words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
+export const DB = { vowels: [], words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
 
 export async function loadAll() {
-  const [words, sentences, stories, pairs, rules, sounds] = await Promise.all(
-    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv'].map(load));
+  const [words, sentences, stories, pairs, rules, sounds, vowels] = await Promise.all(
+    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv', 'vowels.csv'].map(load));
+  DB.vowels = vowels;
   DB.words = words.filter((r) => r.checked !== 'N' && r.word).map(enrichWord);
   DB.byId = Object.fromEntries(DB.words.map((w) => [w.id, w]));
   DB.allWords = DB.words;
@@ -239,6 +241,7 @@ export const rule = (key) => DB.ruleByKey[key];
 // 找一格拼法對應的規則（第 5、9 步的提示視窗）
 export function ruleForBox(b) {
   if (b.magic) return rule('g:' + b.g + '-e') || rule('type:E');
+  if (/^(tion|sion|ture)$/.test(b.g)) return rule('type:S');
   if (b.magicVowel) return rule('g:' + b.g + '-e') || rule('type:E');
   if (b.longOpen) return rule('g:' + b.g + ':' + b.ph) || rule('type:O');
   return rule('g:' + b.g + ':' + b.ph) || (b.g === 'y' && rule('y:' + b.ph)) || (b.ph === 'ə' && rule('g:ə')) || rule('g:' + b.g)

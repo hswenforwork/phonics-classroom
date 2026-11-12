@@ -2,6 +2,7 @@
 import { say, sayRule, sfx } from './audio.js';
 import { hasAsset } from './audio.js';
 import { zyNode } from './zhuyin.js';
+import { cardOfSpelling, vowelIndex, cardFor, spellOf } from './vowels.js';
 
 export function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -61,7 +62,8 @@ export function ruleDialog(rules) {
         h('div', { class: 'rule-who' }, r.character),
         h('button', { class: 'rule-mn bpmf', onClick: () => sayRule(r) }, r.mnemonic),
         r.action && r.action !== '—' ? h('div', { class: 'rule-act' }, '一起做：' + r.action) : null,
-        h('div', { class: 'rule-eg' }, r.examples))),
+        h('div', { class: 'rule-eg' }, r.examples),
+        valleyLink(r, close))),
     mouthImage(r),
     h('details', { class: 'rule-more' }, h('summary', {}, '更多（給家長／老師）'),
       h('p', {}, r.parent_note),
@@ -71,6 +73,19 @@ export function ruleDialog(rules) {
     h('div', { class: 'modal-box' }, h('button', { class: 'modal-x', 'aria-label': '關閉', onClick: close }, '×'), ...cards));
   document.body.append(wrap);
   sfx('tap');
+}
+// 母音規則：連到母音沙谷看這個音的其他拼法
+function valleyLink(r, close) {
+  const m = String(r.key || '').match(/^g:([a-z]+)(-e)?(?::|$)/);
+  if (!m) return null;
+  const c = cardOfSpelling(m[1] + (m[2] ? '_e' : ''));
+  return c ? h('a', { class: 'btn small valley-link', href: '#book/valley/' + c.id, onClick: close }, '去母音沙谷看「' + c.label + '」的其他拼法') : null;
+}
+// 我來拼拼錯母音時：這個音還有哪些拼法
+export function otherSpellings(b) {
+  const sp = spellOf(b); const c = cardFor(b.ph, sp);
+  if (!c) return [];
+  return vowelIndex()[c.id].spellings.filter((x) => x !== sp);
 }
 function mouthImage(r) {
   const m = r.title.match(/\/([^/]+)\//); if (!m) return null;

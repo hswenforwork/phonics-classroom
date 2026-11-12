@@ -62,6 +62,14 @@ export function place(itemId, slot) { const p = me(); for (const k in p.placed) 
 export function mysteryDone() { const p = me(); return !!(p && p.mystery[today()]); }
 export function markMystery() { const p = me(); if (!p || p.mystery[today()]) return; p.mystery[today()] = 1; p.bonus = (p.bonus || 0) + 3; save(); }
 
+// 母音小遊戲：每一站每天第一次玩完可以拿腳印章
+export function vowelReward(no, n) {
+  const p = me(); if (!p) return 0;
+  p.vowelGame = p.vowelGame || {};
+  const k = today() + '|' + no;
+  if (p.vowelGame[k] != null || n <= 0) { if (p.vowelGame[k] == null) p.vowelGame[k] = 0; save(); return 0; }
+  p.vowelGame[k] = n; p.bonus = (p.bonus || 0) + n; save(); return n;
+}
 export function setResume(r) { const p = me(); if (!p) return; p.resume = r; save(); }
 export const resume = () => (me() ? me().resume : null);
 export function guideSeen() { const p = me(); if (p) { p.seenGuide = true; save(); } }

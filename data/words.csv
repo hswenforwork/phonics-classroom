@@ -58,6 +58,11 @@ S2-21,egg,2,沙丘,🥚,蛋,egg,e-gg,/eɡ/,C,1,,,補充,,Y
 S2-22,neck,2,沙丘,,頸部,neck,n-e-ck=k,/nek/,C,1,,,補充,,Y
 S2-23,pink,2,沙丘,,粉紅色,pink,p-i-n=ŋ-k,/pɪŋk/,C,1,,,補充,,Y
 S2-24,rock,2,沙丘,🪨,岩石,rock,r-o-ck=k,/rɒk/,C,1,,,補充,,Y
+S2-25,song,2,沙丘,🎵,歌,song,s-o-ng,/sɒŋ/,C,1,,,補充,,Y
+S2-26,long,2,沙丘,📏,長長的,long,l-o-ng,/lɒŋ/,C,1,,,補充,,Y
+S2-27,hang,2,沙丘,🪝,掛,hang,h-a-ng,/hæŋ/,C,1,,,補充,,Y
+S2-28,bank,2,沙丘,🏦,銀行,bank,b-a-n=ŋ-k,/bæŋk/,C,1,,,補充,,Y
+S2-29,thank,2,沙丘,🙏,謝謝,thank,th-a-n=ŋ-k,/θæŋk/,C,1,,,補充,,Y
 S3-01,rain,3,金合歡樹,🌧️,雨,rain,r-ai-n,/reɪn/,T,1,,,Movers,,Y
 S3-02,day,3,金合歡樹,📅,一天,day,d-ay,/deɪ/,T,1,,,Starters,,Y
 S3-03,bee,3,金合歡樹,🐝,蜜蜂,bee,b-ee,/biː/,T,1,,,Starters,,Y
@@ -159,7 +164,6 @@ S6-19,table,6,地道迷宮,🍽️,桌子,ta/ble,t-a/b-le=əl,/ˈteɪ.bəl/,O/L,
 S6-20,apple,6,地道迷宮,🍎,蘋果,ap/ple,a-p/p-le=əl,/ˈæp.əl/,C/L,1,,,Starters,,Y
 S6-21,lion,6,地道迷宮,🦁,獅子,li/on,l-i=aɪ/o=ə-n,/ˈlaɪ.ən/,O/C,1,,,Movers,,Y
 S6-22,hippo,6,地道迷宮,🦛,河馬,hip/po,h-i-p/p-o,/ˈhɪp.əʊ/,C/O,1,,,Starters,,Y
-S6-23,watermelon,8,星空營地,🍉,西瓜,wa/ter/mel/on,w-a=ɔː/t-er=ə/m-e-l/o=ə-n,/ˈwɔː.tə.mel.ən/,W/R/C/C,1,a,,Starters,,Y
 S6-24,alligator,6,地道迷宮,,鱷魚,al/li/ga/tor,a-l/l-i/g-a=eɪ/t-or=ə,/ˈæl.ɪ.ɡeɪ.tə/,C/O/O/R,1,,,補充,Y,Y
 S6-25,insect,6,地道迷宮,,昆蟲,in/sect,i-n/s-e-c-t,/ˈɪn.sekt/,C/C,1,,,補充,,Y
 S6-26,igloo,6,地道迷宮,,雪屋,ig/loo,i-g/l-oo=uː,/ˈɪɡ.luː/,C/T,1,,,補充,,Y
@@ -188,12 +192,13 @@ S7-14,babies,7,大草原,👶,嬰兒（複數）,ba/bies,b-a/b-ie=i-s=z,/ˈbeɪ.
 S7-15,puppies,7,大草原,🐶,小狗（複數）,pup/pies,p-u-p/p-ie=i-s=z,/ˈpʌp.iz/,C/T,1,,puppy+es|y變i,Movers,,Y
 S7-16,jumped,7,大草原,🦘,跳了,jumped,j-u-m-p-ed=t,/dʒʌmpt/,C,1,,jump+ed|/t/,Starters,,Y
 S7-17,played,7,大草原,🎮,玩了,played,p-l-ay-ed=d,/pleɪd/,T,1,,play+ed|/d/,Starters,,Y
-S7-18,wanted,8,星空營地,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
 S7-19,leaves,7,大草原,🍂,葉子（複數）,leaves,l-ea-v-es=z,/liːvz/,T,1,,leaf+ves|f變ves,Movers,,Y
 S7-20,mice,7,大草原,🐭,老鼠（複數）,mice,m-i-c=s(e),/maɪs/,E,1,,mouse→mice|不規則,Starters,,Y
 S7-21,teeth,7,大草原,🦷,牙齒（複數）,teeth,t-ee-th,/tiːθ/,T,1,,tooth→teeth|不規則,Movers,,Y
 S7-22,unhappy,7,大草原,😞,不開心,un/hap/py,u-n/h-a-p/p-y=i,/ʌnˈhæp.i/,C/C/O,2,,un+happy,Starters,,Y
 S7-23,otter,7,大草原,🦦,水獺,ott/er,o-tt=t/er=ə,/ˈɒt.ə/,C/R,1,,ott+er,補充,,Y
+S7-24,tying,7,大草原,🎀,綁（正在綁）,ty/ing,t-y=aɪ/i-ng,/ˈtaɪ.ɪŋ/,O/C,1,,tie+ing|ie變y,補充,,Y
+S7-25,lying,7,大草原,🛌,躺（正在躺）,ly/ing,l-y=aɪ/i-ng,/ˈlaɪ.ɪŋ/,O/C,1,,lie+ing|ie變y,補充,,Y
 S8-01,banana,8,星空營地,🍌,香蕉,ba/na/na,b-a=ə/n-a=ɑː/n-a=ə,/bəˈnɑː.nə/,O/O/O,2,,,Starters,,Y
 S8-02,teacher,8,星空營地,🧑‍🏫,老師,tea/cher,t-ea/ch-er=ə,/ˈtiː.tʃə/,T/R,1,,,Starters,,Y
 S8-03,doctor,8,星空營地,🧑‍⚕️,醫生,doc/tor,d-o-c/t-or=ə,/ˈdɒk.tə/,C/R,1,,,Movers,,Y
@@ -211,11 +216,13 @@ S8-14,child,8,星空營地,🧒,小孩,child,ch-i=aɪ-l-d,/tʃaɪld/,W,1,,,Start
 S8-15,old,8,星空營地,👴,老的,old,o=əʊ-l-d,/əʊld/,W,1,,,Starters,,Y
 S8-16,ball,8,星空營地,⚽,球,ball,b-a=ɔː-ll,/bɔːl/,W,1,,,Starters,,Y
 S8-17,water,8,星空營地,💧,水,wa/ter,w-a=ɔː/t-er=ə,/ˈwɔː.tə/,W/R,1,a,,Starters,,Y
+S7-18,wanted,8,星空營地,🙋,想要了,want/ed,w-a=ɒ-n-t/e=ɪ-d,/ˈwɒn.tɪd/,W/C,1,a,want+ed|/ɪd/,Starters,,Y
 S8-18,mother,8,星空營地,👩,媽媽,moth/er,m-o=ʌ-th=ð/er=ə,/ˈmʌð.ə/,W/R,1,o,,Starters,,Y
 S8-19,said,8,星空營地,💬,說了,said,s-ai=e-d,/sed/,W,1,ai,,Starters,,Y
 S8-20,was,8,星空營地,,是（過去式）,was,w-a=ɒ-s=z,/wɒz/,W,1,a,,Starters,,Y
 S8-21,the,8,星空營地,,這個、那個,the,th=ð-e=ə,/ðə/,W,1,e,,Starters,,Y
 S8-22,you,8,星空營地,👉,你,you,y-ou=uː,/juː/,W,1,ou,,Starters,,Y
+S6-23,watermelon,8,星空營地,🍉,西瓜,wa/ter/mel/on,w-a=ɔː/t-er=ə/m-e-l/o=ə-n,/ˈwɔː.tə.mel.ən/,W/R/C/C,1,a,,Starters,,Y
 S8-23,one,8,星空營地,1️⃣,一,one,o=wʌ-n[e],/wʌn/,W,1,one,,Starters,,Y
 S8-24,friend,8,星空營地,🧑‍🤝‍🧑,朋友,friend,f-r-ie=e-n-d,/frend/,W,1,i,,Starters,,Y
 S8-25,people,8,星空營地,👥,人們,peo/ple,p-eo=iː/p-le=əl,/ˈpiː.pəl/,W/L,1,eo,,Starters,,Y
@@ -227,3 +234,7 @@ S8-30,octopus,8,星空營地,🐙,章魚,oc/to/pus,o=ɒ-c/t-o=ə/p-u=ə-s,/ˈɒk
 S8-31,wolf,8,星空營地,🐺,野狼,wolf,w-o=ʊ-l-f,/wʊlf/,W,1,o,,補充,,Y
 S8-32,wall,8,星空營地,,留言板,wall,w-a=ɔː-ll,/wɔːl/,W,1,,,補充,,Y
 S8-33,yacht,8,星空營地,,遊艇,yacht,y-a=ɒ[ch]-t,/jɒt/,W,1,ach,,補充,,Y
+S8-34,picture,8,星空營地,🖼️,圖畫,pic/ture,p-i-c/ture=tʃə,/ˈpɪk.tʃə/,C/S,1,,,補充,,Y
+S8-35,station,8,星空營地,🚉,車站,sta/tion,s-t-a=eɪ/tion=ʃən,/ˈsteɪ.ʃən/,O/S,1,,,補充,,Y
+S8-36,question,8,星空營地,❓,問題,ques/tion,qu-e-s/tion=tʃən,/ˈkwes.tʃən/,C/S,1,,,補充,,Y
+S8-37,nature,8,星空營地,🌳,大自然,na/ture,n-a=eɪ/ture=tʃə,/ˈneɪ.tʃə/,O/S,1,,,補充,,Y

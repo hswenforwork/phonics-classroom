@@ -139,6 +139,7 @@ L7-12,7,探險背包,suf:er,-er、-est,比一比的背包,—,"bigger, biggest",
 L7-13,7,探險背包,suf:ful,-ful、-less,裝滿／沒有的背包,—,"helpful, careless",—,一定,-ful 有、-less 沒有。
 L7-14,7,探險背包,suf:ly,-ly,怎麼做的背包，直接加,—,"quickly, slowly",—,一定,-ly 直接加在字後面。
 L7-15,7,探險背包,suf:un,un-、re-,戴在頭上的帽子,—,"unhappy, replay",—,一定,un- 不、re- 再一次。
+L7-16,7,探險背包,suf:ie變y,ie 變 y 規則,ie 遇到 ing，換成 y 再背上,手指交叉換位,"tie→tying, lie→lying",tie→tied（加 ed 不用變）,一定,字尾 ie 加 -ing 時，把 ie 改成 y 再加 ing（避免出現 iei）；加 -ed、-s 不用變（tied、ties）。
 L8-01,8,懶洋洋的甲蟲,g:ə,弱讀 schwa /ə/,小石頭上的母音懶懶說 /ə/,打一個小哈欠,"a-bout, ba-na-na, les-son",—,常常,沒重讀音節的母音常弱化成 /ə/，任何母音字母都可能。
 L8-02,8,懶洋洋的甲蟲,schwa:spell,拼寫用拼寫音,寫字時把懶甲蟲叫醒,拍拍肩,"Wed-nes-day, choc-o-late",—,—,拼寫時可以用「拼寫音」把每個母音讀清楚來記。
 L8-03,8,懶洋洋的甲蟲,schwa:small,句子裡的小字弱讀,a the of to for 在句子裡輕輕唸,手放輕,a cup of tea,—,常常,功能詞在句子中常弱讀。
@@ -166,4 +167,6 @@ P-04,4,發音專區,pair:P-04,/l/ 和 /r/,l 舌尖頂，r 嘟嘴巴,—,"light�
 P-05,1,發音專區,pair:P-05,/v/ 和 /b/,v 咬唇震，b 合唇彈,—,"van–ban, vet–bet",—,—,上齒碰下唇 vs. 雙唇。
 P-06,2,發音專區,pair:P-06,/θ/ 和 /s/,th 吐舌頭，s 舌頭藏好,—,"think–sink, thin–sin",—,—,舌頭是否伸到齒間。
 P-07,2,發音專區,pair:P-07,/n/ 和 /ŋ/,n 舌尖頂，ng 鼻子哼,—,"thin–thing, ran–rang",—,—,舌尖 vs. 舌根。
+L2-22,2,黏黏音,weld:ng,黏黏音 ang ing ong ung,母音黏著 ng 一起走，整塊一起念,雙手手指黏在一起,"hang, king, song, long",—,一定,Welded sounds（黏合音）：短母音後面接 ng 時，母音被鼻音帶著走，整塊教 ang、ing、ong、ung 比一個一個拼容易。英式 ang 的 a 仍接近 /æ/，ong 的 o 是 /ɒ/。
+L2-23,2,黏黏音,weld:nk,黏黏音 ank ink onk unk,黏黏音後面再喀一下 k,手黏住再拍喉嚨,"bank, thank, pink, think",—,一定,Welded sounds（黏合音）：ank、ink、onk、unk 的 n 念 /ŋ/，後面再加 /k/。整塊認讀，例如 b + ank = bank。
 P-08,3,發音專區,pair:P-08,/ʊ/ 和 /uː/,看書短短，月亮拉長,—,"full–fool, pull–pool",—,—,短音 vs. 長音。

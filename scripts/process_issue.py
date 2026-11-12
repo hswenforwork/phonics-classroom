@@ -9,7 +9,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PATH = os.path.join(ROOT, 'data', 'words.csv')
 PLACES = {1: '地洞入口', 2: '沙丘', 3: '金合歡樹', 4: '岩石瞭望台', 5: '綠洲水塘', 6: '地道迷宮', 7: '大草原', 8: '星空營地'}
-TYPES = set('COETRDLW')
+TYPES = set('COETRDLWS')
 body = os.environ.get('ISSUE_BODY', '')
 out = os.environ.get('RESULT_FILE', '/dev/stdout')
 
@@ -75,7 +75,7 @@ n = syl.count('/') + 1
 if sounds.count('/') + 1 != n or len(types.split('/')) != n:
     errors.append('音節、音格、音節類型的節數要一樣（用 / 分隔）')
 if any(t not in TYPES for t in types.split('/')):
-    errors.append('音節類型只能用 C O E T R D L W')
+    errors.append('音節類型只能用 C O E T R D L W S')
 ipa = d.get('ipa', '').strip('/')
 if ipa:
     k = re.sub(r'(?<=.)[ˈˌ]', '.', ipa).replace('ˈ', '').replace('ˌ', '').count('.') + 1

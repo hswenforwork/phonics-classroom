@@ -1,5 +1,7 @@
 // 各個畫面
 import { DB, PLACES, NODES, DEFAULT_PH, wordsOf, rule } from './data.js';
+import { soundItem } from './audio.js';
+import { vowelIndex, spellOf, cardFor } from './vowels.js';
 import { play, stop, wordItem, syllableItem, sentenceItem, storyItem, say, sfx, setAudioSettings, hasAsset } from './audio.js';
 import { autogen } from './autogen.js';
 import { applyZhuyin } from './zhuyin.js';
@@ -110,16 +112,17 @@ export function runWords(list, { quick = false, warmCount = 0, mystery = false, 
 }
 
 // ---------- 一個地點 ----------
-const TABS = [['words', '單字'], ['spell', '我來拼'], ['sent', '讀句子'], ['story', '小故事'], ['pairs', '聽聽看']];
+const TABS = [['words', '單字'], ['spell', '我來拼'], ['vowel', '母音挑戰'], ['sent', '讀句子'], ['story', '小故事'], ['pairs', '聽聽看']];
+const vowelTabName = (no) => (no <= 2 ? '聽音選母音' : '這個音怎麼拼');
 export function placeScreen(no, tab = 'words') {
   no = +no; const pl = PLACES[no]; const p = S.me(); if (!p || !pl) return go('home');
   const ws = wordsOf(no); const pr = placeProgress(no);
   const body = h('div', { class: 'tab-body' });
-  const tabs = h('nav', { class: 'tabs' }, ...TABS.map(([k, n]) => h('a', { class: 'tab' + (k === tab ? ' on' : ''), href: `#place/${no}/${k}` }, n)));
+  const tabs = h('nav', { class: 'tabs' }, ...TABS.map(([k, n]) => h('a', { class: 'tab' + (k === tab ? ' on' : ''), href: `#place/${no}/${k}` }, k === 'vowel' ? vowelTabName(no) : n)));
   app().replaceChildren(h('div', { class: 'screen place', style: { '--bg': pl.bg, '--fg': pl.fg, '--tx': pl.tx } },
     topBar(() => go('home'), h('div', { class: 'place-title' }, h('b', {}, pl.name), h('small', {}, pl.topic + `｜探險過 ${pr.done} / ${pr.total} 個字`)), stampCount()),
     dune(), tabs, body));
-  ({ words: tabWords, spell: tabSpell, sent: tabSentences, story: tabStory, pairs: tabPairs })[tab](body, no, ws);
+  ({ words: tabWords, spell: tabSpell, vowel: tabVowel, sent: tabSentences, story: tabStory, pairs: tabPairs }[tab] || tabWords)(body, no, ws);
 }
 
 function wordCard(w, onClick) {
@@ -186,12 +189,149 @@ function tabPairs(body, no) {
   body.append(title('聽聽看，蒙蒙說的是哪一個？'), area); round();
 }
 
+// ---------- 母音挑戰：第 1、2 站聽音選母音；第 3 站起這個音怎麼拼 ----------
+const SHORT_V = { a: 'æ', e: 'e', i: 'ɪ', o: 'ɒ', u: 'ʌ' };
+function vowelQuestions(no) {
+  const idx = vowelIndex();
+  const qs = [];
+  const add = (ws, mode) => {
+    for (const w of ws) {
+      const boxes = w.syls.flat();
+      if (mode === 'short') {
+        const vs = boxes.filter((b) => b.vowel);
+        if (w.syls.length === 1 && vs.length === 1 && SHORT_V[vs[0].g] === vs[0].ph && !boxes.some((b) => b.magic)) qs.push({ w, b: vs[0], mode, options: ['a', 'e', 'i', 'o', 'u'] });
+      } else {
+        for (const b of boxes) {
+          if (!b.vowel || !b.ph) continue;
+          const sp = spellOf(b); const c = cardFor(b.ph, sp); if (!c) continue;
+          const alts = idx[c.id].spellings.filter((x) => x !== sp && (idx[c.id].words[x] || []).length);
+          if (alts.length) { qs.push({ w, b, mode, card: c, options: [sp, ...shuffle(alts).slice(0, 2)] }); break; }
+        }
+      }
+    }
+  };
+  const mode = no <= 2 ? 'short' : 'spell';
+  add(wordsOf(no), mode);
+  for (let st = no - 1; st >= 1 && qs.length < 8; st--) add(wordsOf(st), mode);
+  return shuffle(qs).slice(0, 5);
+}
+// 字的骨架：要問的那一格挖空（魔法 e 也一起挖空）
+function skeleton(w, target, fill) {
+  const out = [];
+  for (const syl of w.syls) for (const b of syl) {
+    const magicHere = target.magicVowel && b.magic && syl.includes(target);
+    const sb = b.silentBefore || ''; const sa = b.silentAfter || '';
+    if (b === target) out.push(h('span', { class: 'gap-slot' + (fill ? ' filled' : '') }, fill ? fill.split('_')[0] : '\u00a0'));
+    else out.push(h('span', {}, sb + b.g + sa));
+    if (b.magic) out.push(magicHere ? h('span', { class: 'gap-slot' + (fill ? ' filled' : '') }, fill ? 'e' : '\u00a0') : h('span', {}, 'e'));
+  }
+  return h('div', { class: 'skeleton' }, ...out);
+}
+function tabVowel(body, no) {
+  const qs = vowelQuestions(no);
+  const area = h('div', { class: 'vowel-game' });
+  body.append(title(no <= 2 ? '聽一聽，中間是哪一個母音？' : '聽一聽，這個音要怎麼拼？'), area);
+  if (!qs.length) { area.append(h('p', { class: 'hint' }, '這一站還沒有適合的字，先去探險其他站吧！')); return; }
+  let i = 0; let right = 0;
+  const next = () => {
+    if (i >= qs.length) {
+      const got = S.vowelReward(no, right);
+      area.replaceChildren(h('div', { class: 'vg-end' }, h('h2', {}, `答對 ${right} / ${qs.length} 題！`),
+        got ? h('p', {}, `拿到 ${got} 個腳印章！`, stamps(got, got, 26)) : h('p', { class: 'muted' }, right ? '今天這一站的腳印章已經拿過了，明天再來！' : '再玩一次試試看！'),
+        h('div', { class: 'row' }, h('button', { class: 'btn primary', onClick: () => tabVowelRestart() }, '再玩一次'), h('a', { class: 'btn', href: '#book/valley' }, '去母音沙谷'))));
+      if (right) { sfx('win'); confetti(); }
+      return;
+    }
+    const q = qs[i]; let first = true;
+    const say1 = () => play(wordItem(q.w));
+    const opts = shuffle(q.options.slice());
+    area.replaceChildren(
+      h('div', { class: 'vg-progress' }, `第 ${i + 1} / ${qs.length} 題`),
+      // 沒有圖片或 emoji 的字不顯示文字卡（不然就看到答案了）
+      h('div', { class: 'listen-row' }, h('div', { class: 'pic-card' }, q.w.emoji || hasAsset('images/words/' + q.w.word + '.png') ? wordPicture(q.w, 80) : mascot(80)), h('button', { class: 'big-round', onClick: say1 }, '再聽一次')),
+      skeleton(q.w, q.b),
+      h('div', { class: 'choices four' }, ...opts.map((o) => h('button', { class: 'choice vg-opt', onClick: (e) => {
+        const btn = e.currentTarget;
+        if (o !== (q.mode === 'short' ? q.b.g : spellOf(q.b))) { first = false; sfx('bad'); btn.classList.add('shake'); setTimeout(() => btn.classList.remove('shake'), 400); say1(); return; }
+        if (first) right++;
+        sfx('ok'); area.querySelector('.skeleton').replaceWith(skeleton(q.w, q.b, o));
+        area.querySelector('.choices').replaceWith(h('div', { class: 'vg-after' },
+          q.card ? h('p', {}, '這個音也可以拼成：', vowelIndex()[q.card.id].spellings.filter((x) => x !== o).join('、')) : null,
+          h('div', { class: 'row' }, q.card ? h('a', { class: 'btn small', href: '#book/valley/' + q.card.id }, '去母音沙谷') : null,
+            h('button', { class: 'btn primary', onClick: () => { i++; next(); } }, i + 1 < qs.length ? '下一題 →' : '看結果'))));
+        play(wordItem(q.w));
+      } }, o))));
+    say1();
+  };
+  const tabVowelRestart = () => { body.replaceChildren(); tabVowel(body, no); };
+  next();
+}
+
 // ---------- 探險手冊：地道網、深淺房間、收集 ----------
-export function bookScreen(tab = 'net') {
+// ---------- 母音沙谷 ----------
+const MOUTH_SVG = {
+  smile: '<path d="M5 12 Q24 30 43 12 Q24 20 5 12Z" fill="#B5302A"/><path d="M10 14 Q24 19 38 14" stroke="#fff" stroke-width="3" fill="none"/>',
+  open: '<ellipse cx="24" cy="16" rx="12" ry="13" fill="#6B2420" stroke="#E2836B" stroke-width="4"/><path d="M15 9 h18" stroke="#fff" stroke-width="3"/>',
+  round: '<circle cx="24" cy="16" r="9" fill="#6B2420" stroke="#E2836B" stroke-width="6"/>',
+  relaxed: '<ellipse cx="24" cy="16" rx="11" ry="5" fill="#6B2420" stroke="#E2836B" stroke-width="4"/>',
+};
+const MOUTH_NAME = { smile: '笑笑嘴', open: '張大嘴', round: '圓圓嘴', relaxed: '放鬆嘴' };
+// 嘴型圖：家長上傳的 images/mouth/<音標>.png 優先，沒有就用簡單圖示
+function mouthIcon(c, size = 40) {
+  const ipa = c.ipa.split(' ')[0];
+  for (const ext of ['png', 'jpg', 'webp', 'svg']) if (hasAsset(`images/mouth/${ipa}.${ext}`)) return h('img', { class: 'mouth-img', src: `images/mouth/${ipa}.${ext}`, alt: MOUTH_NAME[c.mouth] || '', width: size, height: size });
+  return h('span', { class: 'mouth-ico', title: MOUTH_NAME[c.mouth] || '', html: `<svg viewBox="0 0 48 32" width="${size}" height="${Math.round(size * 0.67)}">${MOUTH_SVG[c.mouth] || MOUTH_SVG.relaxed}</svg>` });
+}
+function valleyTab(body, openId) {
+  const idx = vowelIndex();
+  const done = (w) => !!S.wordState(w.id);
+  const litCount = (e) => e.spellings.filter((sp) => (e.words[sp] || []).some(done)).length;
+  const detail = h('div', { class: 'vv-detail' });
+  const card = (c, style) => {
+    const e = idx[c.id]; const n = litCount(e);
+    return h('button', { class: 'vv-card' + (n ? ' lit' : '') + ' m-' + c.mouth, style, 'data-id': c.id, onClick: () => open(c.id) },
+      h('span', { class: 'vv-label' }, c.label), h('small', {}, c.name_zh), h('span', { class: 'vv-count' }, `${n}/${e.spellings.length}`));
+  };
+  function open(id) {
+    const e = idx[id]; if (!e) return; const c = e.card;
+    body.querySelectorAll('.vv-card').forEach((x) => x.classList.toggle('on', x.dataset.id === id));
+    play(soundItem(c.ipa.split(' ')[0]));
+    detail.replaceChildren(h('div', { class: 'vv-head' }, mouthIcon(c, 56),
+      h('button', { class: 'vv-big', onClick: () => play(soundItem(c.ipa.split(' ')[0])) }, '🔊 ', c.label),
+      h('div', {}, h('b', {}, c.name_zh, '（', MOUTH_NAME[c.mouth], '）'), h('p', { class: 'vv-mn', onClick: () => say(c.mnemonic) }, c.mnemonic), c.note ? h('p', { class: 'vv-note' }, '💡 ', c.note) : null)),
+      h('div', { class: 'vv-spells' }, ...e.spellings.map((sp) => {
+        const ws = e.words[sp] || []; const learned = ws.filter(done);
+        const cls = !ws.length ? ' none' : learned.length ? ' lit' : '';
+        return h('div', { class: 'vv-spell' + cls },
+          h('span', { class: 'vv-sp' }, sp),
+          !ws.length ? h('small', {}, '還沒有字') : learned.length
+            ? h('div', { class: 'vv-words' }, ...learned.slice(0, 4).map((w) => h('button', { class: 'vv-word', onClick: () => play(wordItem(w)) }, wordPicture(w, 24), w.word)))
+            : h('small', {}, '還沒探險'));
+      })));
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  const valley = DB.vowels.filter((c) => c.group === 'valley').sort((a, b) => a.order - b.order);
+  const n = valley.length; const mid = (n - 1) / 2;
+  const top = DB.vowels.find((c) => c.group === 'top');
+  body.append(title('母音沙谷：點一張卡，聽聽這個音有哪些拼法！'),
+    h('div', { class: 'vv-mouths' }, ...['smile', 'open', 'round'].map((m) => h('span', {}, mouthIcon({ ipa: '', mouth: m }, 44), MOUTH_NAME[m]))),
+    h('div', { class: 'vv-valley' },
+      top ? card(top, { left: '50%', top: '0px', transform: 'translateX(-50%)' }) : null,
+      ...valley.map((c, i) => card(c, { left: `calc(${(i / (n - 1)) * 100}% - ${(i / (n - 1)) * 76}px)`, top: `${20 + (1 - Math.abs(i - mid) / mid) * 210}px` }))),
+    h('div', { class: 'vv-groups' },
+      h('section', {}, h('h3', {}, '雙母音（嘴巴會滑）'), h('div', { class: 'vv-row' }, ...DB.vowels.filter((c) => c.group === 'diph').map((c) => card(c)))),
+      h('section', {}, h('h3', {}, 'r 控制母音（英式 r 不出聲）'), h('div', { class: 'vv-row' }, ...DB.vowels.filter((c) => c.group === 'r').map((c) => card(c))))),
+    detail,
+    h('p', { class: 'hint' }, '亮起來的拼法是你探險過的字；虛線的拼法字庫裡還沒有字。'));
+  if (openId) open(openId);
+}
+
+export function bookScreen(tab = 'net', sub) {
   const p = S.me(); if (!p) return go('profiles');
   const body = h('div', { class: 'tab-body' });
   app().replaceChildren(h('div', { class: 'screen book' }, topBar(() => go('home'), h('b', {}, '探險手冊'), stampCount()), dune(),
-    h('nav', { class: 'tabs' }, ...[['net', '地道網'], ['rooms', '深淺房間'], ['stickers', '收集冊']].map(([k, n]) => h('a', { class: 'tab' + (k === tab ? ' on' : ''), href: '#book/' + k }, n))), body));
+    h('nav', { class: 'tabs' }, ...[['net', '地道網'], ['valley', '母音沙谷'], ['rooms', '深淺房間'], ['stickers', '收集冊']].map(([k, n]) => h('a', { class: 'tab' + (k === tab ? ' on' : ''), href: '#book/' + k }, n))), body));
+  if (tab === 'valley') return valleyTab(body, sub);
   if (tab === 'net') {
     const lit = new Set(); for (const id of Object.keys(p.words)) { const w = DB.byId[id]; if (w) w.tags.forEach((t) => lit.add(t)); }
     const pos = Object.fromEntries(NODES.map((n) => [n.id, n]));
@@ -330,7 +470,8 @@ export function parentScreen(unlocked) {
       h('section', { class: 'panel' }, h('h2', {}, (p ? p.name : '') + ' 的學習狀況'),
         h('p', {}, `探險過 ${p ? Object.keys(p.words).length : 0} / ${DB.words.length} 個字，腳印章 ${S.stampsTotal()} 個。`),
         h('h3', {}, '最常卡住的步驟'), missRows.length ? h('table', {}, h('tr', {}, h('th', {}, '步驟'), h('th', {}, '錯誤次數')), ...missRows.map(([k, n]) => h('tr', {}, h('td', {}, stepNames[k] || k), h('td', {}, n)))) : h('p', { class: 'muted' }, '還沒有紀錄'),
-        h('h3', {}, '還沒拿滿 3 個章的字'), weak.length ? h('div', { class: 'chips' }, ...weak.map(([w, s]) => h('span', { class: 'chip' }, w.word, ' ', s.best, '★'))) : h('p', { class: 'muted' }, '沒有，太棒了！')),
+        h('h3', {}, '還沒拿滿 3 個章的字'), weak.length ? h('div', { class: 'chips' }, ...weak.map(([w, s]) => h('span', { class: 'chip' }, w.word, ' ', s.best, '★'))) : h('p', { class: 'muted' }, '沒有，太棒了！'),
+        h('h3', {}, '進度對照：網站 8 站 ↔ MB Phonics Scope & Sequence'), scopeTable(p)),
       h('section', { class: 'panel' }, h('h2', {}, '新增或修改單字（送到 GitHub）'),
         h('p', { class: 'muted' }, '只要輸入一個英文單字，按「自動產生」，工具會查字典並依自然發音規則填好其他欄位；確認後按送出，會開啟 GitHub 的申請單頁面，按 Submit 即可，約 1～3 分鐘後網站更新。欄位寫法見 data/README.md。'),
         h('div', { class: 'row gen-row' }, f.word, h('button', { class: 'btn primary', onClick: () => generate(false) }, '自動產生'), regenBtn),
@@ -342,6 +483,27 @@ export function parentScreen(unlocked) {
       h('section', { class: 'panel' }, h('h2', {}, '探險隊員'), ...S.profiles().map((x) => h('div', { class: 'row' }, h('span', { class: 'avatar sm', style: { background: x.color } }, x.name.slice(0, 1)), x.name,
         h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: x.zhuyin !== false, onChange: (e) => { x.zhuyin = e.target.checked; S.persist(); } }), '顯示注音'),
         h('button', { class: 'btn small', onClick: () => { if (confirm(`確定要刪除 ${x.name} 的進度嗎？`)) { S.removeProfile(x.id); parentScreen(true); } } }, '刪除')))))));
+}
+
+// 網站 8 站對應 Scope & Sequence（Becca Rose, 2025）的階段
+const SCOPE = {
+  1: ['1. Letter Sounds 字母音', '2. CVC Words 短母音 CVC'],
+  2: ['3. Digraphs 雙字母', '5. Welded Sounds 黏合音'],
+  3: ['7. Vowel Teams 母音組合', '8. R-Controlled Vowels r 控制母音'],
+  4: ['4. Consonant Blends 子音群', '10. Three-consonant Blends 三子音'],
+  5: ['6. Long Vowels（Magic E）', '11／15. Soft C／Soft G 軟 c、g'],
+  6: ['13. Compound Words 複合字', '14. Closed／Open Syllables 閉／開音節', '18. Syllable Division 切音節'],
+  7: ['12. Inflectional Endings 詞尾變化', '17. Complex Inflectional Endings 複雜詞尾', '19. Affixes 字首字尾'],
+  8: ['16. Complex Patterns（dge tch igh ind old ost tion ture）', '弱讀與例外字（網站額外）'],
+};
+function scopeTable(p) {
+  return h('table', { class: 'scope' }, h('tr', {}, h('th', {}, '網站地點'), h('th', {}, 'Scope & Sequence 階段'), h('th', {}, '探險過')),
+    ...PLACES.slice(1).map((pl) => {
+      const all = DB.allWords.filter((w) => w.stage === pl.no);
+      const done = p ? all.filter((w) => p.words[w.id]).length : 0;
+      return h('tr', {}, h('td', {}, pl.no + ' ' + pl.name), h('td', {}, ...(SCOPE[pl.no] || []).map((x) => h('div', {}, x))),
+        h('td', {}, h('div', { class: 'scope-bar' }, h('span', { style: { width: (all.length ? (done / all.length) * 100 : 0) + '%' } })), `${done} / ${all.length}`));
+    }));
 }
 
 // ---------- 發音檢查：逐字聽單字與音節，確認 Google 有照音標念 ----------
@@ -440,7 +602,7 @@ export function route() {
   switch (name) {
     case 'profiles': return profilesScreen();
     case 'place': return placeScreen(a, b);
-    case 'book': return bookScreen(a);
+    case 'book': return bookScreen(a, b);
     case 'burrow': return burrowScreen();
     case 'parent': return parentScreen(false);
     default: return homeScreen();

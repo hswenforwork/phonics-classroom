@@ -1,0 +1,22 @@
+﻿id,group,order,ipa,label,name_zh,mouth,spellings,mnemonic,note
+ee,valley,1,iː i,ē,長 e,smile,e e_e ee ea y ey,嘴巴笑笑拉長念 ee；ee、ea 在中間，y、ey 在最後,
+i,valley,2,ɪ,ĭ,短 i,smile,i y,嘴巴小小笑，短短的 i,
+a_long,valley,3,eɪ,ā,長 a,smile,a a_e ai ay eigh,長 a 有好幾件衣服：a_e 魔法 e、ai 在中間、ay 在最後,
+e,valley,4,e,ĕ,短 e,smile,e ea,嘴巴半開短短 e；ea 偶爾也念短 e,
+a,valley,5,æ,ă,短 a,open,a,嘴巴張大像咬蘋果，短短的 a,
+i_long,valley,6,aɪ,ī,長 i,open,i i_e y igh ie,長 i 嘴巴會滑：i_e 魔法 e、igh 在中間、y 和 ie 在最後,
+o,valley,7,ɒ,ŏ,短 o,open,o a,嘴巴張大往下，短短的 o；w 後面的 a 也這樣念,
+aw,valley,8,ɔː,aw,aw,round,aw au al a,嘴巴圓圓拉長 aw；au 在中間、aw 在最後、al 遇到 l,念法跟 r 控制區的 or 一樣
+u,valley,9,ʌ,ŭ,短 u,open,u o,嘴巴放鬆短短的 u；o 偶爾偷穿 u 的衣服,
+o_long,valley,10,əʊ,ō,長 o,round,o o_e oa ow oe,長 o 嘴巴變圓：o_e 魔法 e、oa 在中間、ow 和 oe 在最後,
+oo_short,valley,11,ʊ,ŏŏ,短 oo,round,oo u,嘴巴小圓圈，短短的 oo,
+oo_long,valley,12,uː,ōō,長 oo,round,oo ue u_e ew ui ou,嘴巴嘟最圓，長長的 oo；ew、ue 在最後,
+u_long,valley,13,juː,yū,長 u,round,u u_e ue ew,先說 y 再說 oo，就是長 u,
+schwa,top,0,ə,ə,懶懶音,relaxed,a e i o u er or,懶懶的音：沒有重音的母音常常變成它,
+oi,diph,1,ɔɪ,oi,oi,round,oi oy,oi 在中間、oy 在最後，嘴巴從圓圓滑到笑笑,
+ou,diph,2,aʊ,ou,ou,open,ou ow,ou 在中間、ow 在最後，嘴巴從大大滑到圓圓,ow 也可能念長 o
+ar,r,1,ɑː,ar,ar,open,ar a,嘴巴張大念 ar，英式 r 不出聲,
+er,r,2,ɜː,er,er,relaxed,er ir ur ear,er、ir、ur 三兄弟念一樣，英式 r 不出聲,
+or,r,3,ɔː,or,or,round,or ore oor our ar,or、ore、our 念一樣，英式 r 不出聲,念法跟沙谷裡的 aw 一樣
+air,r,4,eə,air,air,smile,air are ear,air、are、ear 都可以念這個音,
+ear,r,5,ɪə,ear,ear,smile,ear eer ere,ear、eer 念一樣，嘴巴從笑笑滑到放鬆,
