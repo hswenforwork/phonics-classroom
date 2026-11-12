@@ -14,6 +14,8 @@ const NEAR = {
 };
 const VOWEL = /[aeiou]/;
 const wordOf = (units) => units.join('');
+// 中文意思：字梯清單的 zh 優先，沒有就用字庫的
+const zhOf = (w) => (DB.ladderWords[w] && DB.ladderWords[w].zh) || ((DB.allWords.find((x) => x.word === w) || {}).zh) || '';
 export const ladderReady = (l) => l.steps.every((u) => hasAsset('audio/words/' + wordOf(u) + '.mp3'));
 
 // 這一站可以玩的字梯：第 1～5 站用自己的，第 6～8 站混合前面幾站
@@ -41,17 +43,18 @@ export function playLadder(root, ladder, opts = {}) {
   const tilesBox = h('div', { class: 'ld-tiles' });
   const cards = h('div', { class: 'ld-cards' });
   const hint = h('p', { class: 'hint' });
+  const zhBox = h('div', { class: 'ld-zh' });
   const listen = () => play(wordItem(wordOf(steps[k])));
   root.replaceChildren(h('div', { class: 'ladder' },
     h('div', { class: 'ld-side' }, rungs),
     h('div', { class: 'ld-main' },
       h('div', { class: 'ld-top' }, h('button', { class: 'big-round', onClick: listen }, '再聽一次'), h('div', { class: 'ld-progress' })),
-      tilesBox, hint, cards)));
+      tilesBox, zhBox, hint, cards)));
   let selected = null; let first = true; let target = 0; let blank = false;
 
   function drawRungs() {
     rungs.replaceChildren(...steps.map((s, i) => h('div', { class: 'ld-rung' + (i < k ? ' done' : i === k ? ' now' : '') },
-      i < k ? wordOf(s) : i === k ? h('span', { class: 'ld-climber' }, mascot(34)) : '')).reverse());
+      i < k ? [h('b', {}, wordOf(s)), h('small', {}, zhOf(wordOf(s)))] : i === k ? h('span', { class: 'ld-climber' }, mascot(34)) : '')).reverse());
     root.querySelector('.ld-progress').textContent = `第 ${k + 1} / ${steps.length} 階`;
   }
   function drawTiles(okAt = -1) {
@@ -63,7 +66,7 @@ export function playLadder(root, ladder, opts = {}) {
     }));
   }
   function setup() {
-    first = true; selected = null;
+    first = true; selected = null; zhBox.replaceChildren();
     const want = steps[k];
     if (k === 0) {
       target = cur.findIndex((u) => VOWEL.test(u)); if (target < 0) target = 0;
@@ -117,10 +120,11 @@ export function playLadder(root, ladder, opts = {}) {
     }
     if (first) firstTry++;
     sfx('ok'); cur = want.slice(); blank = false; drawTiles(target);
+    const zh = zhOf(wordOf(want)); zhBox.replaceChildren(zh ? h('span', {}, zh) : '');
     cards.replaceChildren(); hint.textContent = '';
     play(wordItem(wordOf(want)));
     k++;
-    setTimeout(() => (k < steps.length ? setup() : finish()), 1100);
+    setTimeout(() => (k < steps.length ? setup() : finish()), 1800);
   }
   async function finish() {
     drawRungs();

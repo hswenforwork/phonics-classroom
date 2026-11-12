@@ -215,11 +215,12 @@ async function load(name) {
   return parseCSV(await r.text());
 }
 
-export const DB = { ladders: [], vowels: [], words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
+export const DB = { ladderWords: {}, ladders: [], vowels: [], words: [], allWords: [], byId: {}, sentences: [], stories: [], pairs: [], rules: [], ruleByKey: {}, sounds: [], soundByIpa: {} };
 
 export async function loadAll() {
-  const [words, sentences, stories, pairs, rules, sounds, vowels, ladders] = await Promise.all(
-    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv', 'vowels.csv', 'ladders.csv'].map(load));
+  const [words, sentences, stories, pairs, rules, sounds, vowels, ladders, ladderWords] = await Promise.all(
+    ['words.csv', 'sentences.csv', 'stories.csv', 'pairs.csv', 'rules.csv', 'sounds.csv', 'vowels.csv', 'ladders.csv', 'ladder_words.csv'].map(load));
+  DB.ladderWords = Object.fromEntries(ladderWords.map((r) => [r.word, r]));
   // 字梯：steps 是「c-a-t c-a-p …」，每一階用 - 分開每一個音
   DB.ladders = ladders.filter((r) => r.steps).map((r) => ({ id: r.id, stage: +r.stage, steps: r.steps.split(/\s+/).filter(Boolean).map((x) => x.split('-')) }));
   DB.vowels = vowels;
